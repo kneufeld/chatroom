@@ -3,7 +3,6 @@
 all: all-recursive
 
 test: all-recursive
-	$(MAKE) -C tests test
 
 ## Target name. Use base name if making a library.
 ## Destination is where the target should end up when 'make install'
@@ -27,7 +26,7 @@ LDFLAGS = -L. -L$(SRC_DIR) -L/usr/local/lib
 LIBS =
 
 ## Run make command in these directories
-SUBDIRS = server client tests
+SUBDIRS = server client
 
 ## un/comment for debug symbols in executable
 DEBUG = -g
