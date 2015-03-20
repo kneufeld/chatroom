@@ -12,22 +12,18 @@
 #include <boost/program_options.hpp>
 
 //#include "logger.h"
+#include "server.h"
 
 const std::string app_name = "cr_server";
 const unsigned max_num_ports = 5;
 
 namespace po = boost::program_options;
 namespace asio = boost::asio;
+//namespace tcp   = boost::asio::ip::tcp;
 
 using std::cout;
 using std::cerr;
 using std::endl;
-    
-asio::io_service& IOS()
-{
-    static asio::io_service ios;
-    return ios;
-}
 
 struct SignalHandler
 {
@@ -38,7 +34,7 @@ struct SignalHandler
     }
     
     // stop the ios service when we get a term or ctrl-c
-    void signal_handler( const boost::system::error_code & error, int signal_number )
+    void signal_handler( const boost::system::error_code& error, int signal_number )
     {
         if( error )
         {
@@ -70,7 +66,7 @@ struct SignalHandler
             boost::bind( &SignalHandler::signal_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number )
         );
     }
-
+    
     boost::asio::signal_set signals;
 };
 
@@ -81,7 +77,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     desc.add_options()
     ( "help,h", "show help" )
     ( "debug,d", po::value<bool>()->implicit_value( true )->default_value( false ), "enable debug logging" )
-    ( "ports", po::value<std::vector<unsigned> >(), "listen on ports") 
+    ( "ports", po::value<std::vector<unsigned> >(), "listen on ports" )
     ;
     
     po::positional_options_description pd;
@@ -90,7 +86,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     try
     {
         auto parsed = po::command_line_parser( argc, argv ).options( desc ).positional( pd ).run();
-        po::store( parsed, opts ); 
+        po::store( parsed, opts );
         po::notify( opts ); // this can throw
     }
     catch( boost::program_options::error& e )
@@ -107,7 +103,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     
     if( opts.count( "help" ) )
     {
-        cout << "usage: " << app_name << " [options] " << pd.name_for_position(0) << endl;
+        cout << "usage: " << app_name << " [options] " << pd.name_for_position( 0 ) << endl;
         cout << desc << endl;
         exit( 0 );
     }
@@ -116,15 +112,8 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     {
         //Logger::instance().set_level( Logger::debug );
     }
-
-    if( opts.count("ports") )
-    {
-        cout << "listening on: ";
-        for( auto port : opts["ports"].as< std::vector<unsigned> >() )
-            cout << port << " ";
-        cout << endl;
-    }
-    else
+    
+    if( ! opts.count( "ports" ) )
     {
         cerr << "must specifiy at least one port to listen on" << endl;
         return false;
@@ -145,6 +134,14 @@ int main( int argc, char* argv[] )
         return 1;
     }
     
+    Server::vector servers;
+    
+    for( auto port : opts["ports"].as< std::vector<unsigned> >() )
+    {
+        tcp::endpoint listen( tcp::v4(), port );
+        servers.push_back( std::make_shared<Server>( IOS(), listen ) );
+    }
+        
     try
     {
         SignalHandler handler;
