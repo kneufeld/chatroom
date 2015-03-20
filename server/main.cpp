@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <list>
 #include <algorithm>
 
 #include <signal.h>
@@ -11,64 +12,18 @@
 #include <boost/bind.hpp>
 #include <boost/program_options.hpp>
 
-//#include "logger.h"
-#include "server.h"
+#include "logger.hpp"
+#include "signals.hpp"
+#include "server.hpp"
 
-const std::string app_name = "cr_server";
+const std::string app_name = "server";
 const unsigned max_num_ports = 5;
 
 namespace po = boost::program_options;
-namespace asio = boost::asio;
-//namespace tcp   = boost::asio::ip::tcp;
 
 using std::cout;
 using std::cerr;
 using std::endl;
-
-struct SignalHandler
-{
-    SignalHandler()
-        : signals( IOS(), SIGINT, SIGTERM )
-    {
-        wait_for_signal();
-    }
-    
-    // stop the ios service when we get a term or ctrl-c
-    void signal_handler( const boost::system::error_code& error, int signal_number )
-    {
-        if( error )
-        {
-            // FIXME
-            //TL_ERROR( "received signal handler error: %s. stopping tacar", error.message().c_str() );
-            //IOS().stop();
-            return;
-        }
-        
-        switch( signal_number )
-        {
-        case SIGUSR1: case SIGUSR2:
-            //TL_INFO( "received signal: %d, ignoring", signal_number );
-            wait_for_signal();
-            break;
-            
-        case SIGHUP: case SIGINT: case SIGQUIT: case SIGKILL:
-        default: // for now, just exit on any signal
-            //TL_INFO( "received signal: %d, stopping tacar", signal_number );
-            cout << "caught signal, exiting..." << endl;
-            IOS().stop();
-            break;
-        }
-    }
-    
-    void wait_for_signal()
-    {
-        signals.async_wait(
-            boost::bind( &SignalHandler::signal_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number )
-        );
-    }
-    
-    boost::asio::signal_set signals;
-};
 
 bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
 {
@@ -76,7 +31,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     
     desc.add_options()
     ( "help,h", "show help" )
-    ( "debug,d", po::value<bool>()->implicit_value( true )->default_value( false ), "enable debug logging" )
+    ( "debug,d", po::value<unsigned>()->implicit_value( Logger::debug )->default_value( Logger::info ), "enable debug logging" )
     ( "ports", po::value<std::vector<unsigned> >(), "listen on ports" )
     ;
     
@@ -108,10 +63,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
         exit( 0 );
     }
     
-    if( opts["debug"].as<bool>() )
-    {
-        //Logger::instance().set_level( Logger::debug );
-    }
+    Logger::instance().set_level( (Logger::severity_level)opts["debug"].as<unsigned>() );
     
     if( ! opts.count( "ports" ) )
     {
@@ -122,9 +74,6 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     return true;
 }
 
-/***********************************************************************
-  Main Function
-************************************************************************/
 int main( int argc, char* argv[] )
 {
     po::variables_map opts;
@@ -134,22 +83,22 @@ int main( int argc, char* argv[] )
         return 1;
     }
     
-    Server::vector servers;
-    
-    for( auto port : opts["ports"].as< std::vector<unsigned> >() )
-    {
-        tcp::endpoint listen( tcp::v4(), port );
-        servers.push_back( std::make_shared<Server>( IOS(), listen ) );
-    }
-        
     try
     {
         SignalHandler handler;
+        std::list<chat_server> servers;
+        
+        for( auto port : opts["ports"].as< std::vector<unsigned> >() )
+        {
+            tcp::endpoint endpoint( tcp::v4(), port );
+            servers.emplace_back( IOS(), endpoint );
+        }
+        
         IOS().run();
     }
     catch( std::exception& e )
     {
-        std::cerr << "there was a catastrophic failure: " << e.what() << std::endl;
+        cerr << "there was a catastrophic failure: " << e.what() << endl;
     }
     
     return 0;

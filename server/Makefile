@@ -13,7 +13,7 @@ ldd: all
 
 ## Target name. Use base name if making a library.
 ## Destination is where the target should end up when 'make install'
-TARGET=cr_server
+TARGET=server
 DESTINATION=.
 
 OBJECTS=$(patsubst %.cpp,%.o,$(wildcard *.cpp))
@@ -27,11 +27,11 @@ SRC_DIR=.
 INC_DIR=-I../include -I/usr/local/opt/cppunit/include -I/usr/local/opt/boost/include
 
 ## DEFINES pass in these extra #defines to gcc (no -D required)
-DEFINES=
+DEFINES=-DBOOST_ALL_DYN_LINK
 
 LDFLAGS = -L/usr/local/opt/cppunit/lib -L/usr/local/opt/boost/lib
-LIBS = -lboost_system -lboost_filesystem
-LIBS = -lboost_system -lboost_program_options -lboost_log_setup -lboost_log -lboost_program_options 
+_LIBS = -lboost_system -lboost_program_options -lboost_thread -lboost_log_setup -lboost_log -lboost_program_options -lboost_filesystem
+LIBS=$(addsuffix -mt,$(_LIBS))
 
 ## Run make command in these directories
 SUBDIRS =
@@ -41,7 +41,7 @@ DEBUG =
 ## optimize level 0(none) .. 3(all)
 OPTIMIZE = -O2
 
-DEFS = $(addprefix -D ,$(DEFINES))
+DEFS=$(DEFINES)
 CPPFLAGS = -I$(SRC_DIR) $(INC_DIR)
 #-std=c++11
 CFLAGS = $(DEBUG) $(OPTIMIZE) 
