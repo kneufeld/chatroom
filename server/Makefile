@@ -24,7 +24,7 @@ OBJECTS=$(patsubst %.cpp,%.o,$(wildcard *.cpp))
 ## INC_DIR include these other directories when looking for header files
 OBJ_DIR=.obj
 SRC_DIR=.
-INC_DIR=-I../include -I/usr/local/opt/cppunit/include -I/usr/local/opt/boost/include
+INC_DIR=-I../include -I/usr/local/opt/cppunit/include -I/usr/local/opt/boost/include -I/usr/local/opt/msgpack/include
 
 ## DEFINES pass in these extra #defines to gcc (no -D required)
 DEFINES=-DBOOST_ALL_DYN_LINK
@@ -32,6 +32,7 @@ DEFINES=-DBOOST_ALL_DYN_LINK
 LDFLAGS = -L/usr/local/opt/cppunit/lib -L/usr/local/opt/boost/lib
 _LIBS = -lboost_system -lboost_program_options -lboost_thread -lboost_log_setup -lboost_log -lboost_program_options -lboost_filesystem
 LIBS=$(addsuffix -mt,$(_LIBS))
+LIBS += -lmsgpack
 
 ## Run make command in these directories
 SUBDIRS =
@@ -172,3 +173,6 @@ all-recursive install-recursive clean-recursive:
 
 show.%:
 	@echo $*=\"$($*)\"
+
+astyle:
+	astyle *.h* *.cpp

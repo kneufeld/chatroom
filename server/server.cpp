@@ -15,40 +15,46 @@
 #include <memory>
 #include <set>
 #include <utility>
+#include <algorithm>
 
 #include <boost/asio.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "logger.hpp"
 #include "server.hpp"
 
+using boost::lexical_cast;
 using boost::asio::ip::tcp;
 
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
 
-void chat_room::join( chat_participant_ptr participant )
+chat_room::chat_room( std::string name )
 {
-    participants_.insert( participant );
-    
-    for( auto msg : recent_msgs_ )
-        participant->deliver( msg );
+    m_name = name;
 }
 
-void chat_room::leave( chat_participant_ptr participant )
+void chat_room::join( chat_participant::pointer participant )
 {
-    participants_.erase( participant );
+    m_members.insert( participant );
 }
 
-void chat_room::deliver( const chat_message& msg )
+void chat_room::leave( chat_participant::pointer participant )
 {
-    recent_msgs_.push_back( msg );
-    
-    while( recent_msgs_.size() > max_recent_msgs )
-        recent_msgs_.pop_front();
-        
-    for( auto participant : participants_ )
-        participant->deliver( msg );
+    m_members.erase( participant );
+}
+
+void chat_room::deliver( const chat_participant::pointer& sender, const chat_message& msg )
+{
+    for( auto member : m_members )
+    {
+        if( sender != member )
+        {
+            TL_S_TRACE << *this <<  ": delivering";
+            member->deliver( msg );
+        }
+    }
 }
 
 //----------------------------------------------------------------------
@@ -57,26 +63,14 @@ chat_session::chat_session( tcp::socket socket, chat_room& room )
     : socket_( std::move( socket ) ),
       room_( room )
 {
-    TL_S_DEBUG << "creating chat_session in room: " << room;
+    TL_S_DEBUG << "creating " << *this;
 }
 
 void chat_session::start()
 {
-    TL_S_DEBUG << "chat_session start";
+    TL_S_DEBUG << *this << ": started";
     room_.join( shared_from_this() );
     do_read_header();
-}
-
-void chat_session::deliver( const chat_message& msg )
-{
-    TL_S_TRACE << "deliver: " << msg;
-    bool write_in_progress = !write_msgs_.empty();
-    write_msgs_.push_back( msg );
-    
-    if( !write_in_progress )
-    {
-        do_write();
-    }
 }
 
 void chat_session::do_read_header()
@@ -86,52 +80,49 @@ void chat_session::do_read_header()
                              boost::asio::buffer( read_msg_.data(), chat_message::header_length ),
                              [this, self]( boost::system::error_code ec, std::size_t /*length*/ )
     {
-        if( !ec && read_msg_.decode_header() )
+        if( ec )
         {
-            do_read_body();
+            if( ec == boost::asio::error::operation_aborted )
+            {
+                TL_S_DEBUG << *this << ": connection closed by us";
+            }
+            else if( ec == boost::asio::error::eof )
+            {
+                TL_S_DEBUG << *this << ": connection closed by them";
+            }
+            else
+            {
+                TL_S_WARN << *this << ": error: " << ec.message();
+            }
+            
+            room_.leave( shared_from_this() );
+            return;
         }
         else
         {
-            room_.leave( shared_from_this() );
+            TL_S_TRACE << *this << ": got data: " << read_msg_.data();
+            room_.deliver( self, read_msg_ );
         }
+        do_read_header();
     } );
 }
 
-void chat_session::do_read_body()
+void chat_session::deliver( const chat_message& msg )
 {
-    auto self( shared_from_this() );
-    boost::asio::async_read( socket_,
-                             boost::asio::buffer( read_msg_.body(), read_msg_.body_length() ),
-                             [this, self]( boost::system::error_code ec, std::size_t /*length*/ )
-    {
-        if( !ec )
-        {
-            room_.deliver( read_msg_ );
-            do_read_header();
-        }
-        else
-        {
-            room_.leave( shared_from_this() );
-        }
-    } );
+    write_msg_ = msg;
+    do_write();
 }
 
 void chat_session::do_write()
 {
     auto self( shared_from_this() );
     boost::asio::async_write( socket_,
-                              boost::asio::buffer( write_msgs_.front().data(),
-                                      write_msgs_.front().length() ),
+                              boost::asio::buffer( write_msg_.data(), write_msg_.length() ),
                               [this, self]( boost::system::error_code ec, std::size_t /*length*/ )
     {
         if( !ec )
         {
-            write_msgs_.pop_front();
-            
-            if( !write_msgs_.empty() )
-            {
-                do_write();
-            }
+            TL_S_TRACE << *self << ": wrote " << write_msg_.length() << " bytes";
         }
         else
         {
@@ -145,9 +136,10 @@ void chat_session::do_write()
 chat_server::chat_server( boost::asio::io_service& io_service,
                           const tcp::endpoint& endpoint )
     : acceptor_( io_service, endpoint ),
-      socket_( io_service )
+      socket_( io_service ),
+      room_( lexical_cast<std::string>( endpoint.port() ) )
 {
-    TL_S_DEBUG << "creating chat_server: " << endpoint;
+    TL_S_DEBUG << "creating: " << *this;
     do_accept();
 }
 
@@ -162,7 +154,7 @@ void chat_server::do_accept()
         }
         else
         {
-            TL_S_DEBUG << "accepted connection";
+            TL_S_DEBUG << "accepted connection from: " << socket_.remote_endpoint();
             std::make_shared<chat_session>( std::move( socket_ ), room_ )->start();
         }
         
@@ -170,11 +162,26 @@ void chat_server::do_accept()
     } );
 }
 
-    std::ostream& std::operator<<( std::ostream& out, const chat_message& obj )
-{ return out; }
-    std::ostream& std::operator<<( std::ostream& out, const chat_room& obj )
-{ return out; }
-    std::ostream& std::operator<<( std::ostream& out, const chat_session& obj )
-{ return out; }
-    std::ostream& std::operator<<( std::ostream& out, const chat_server& obj )
-{ return out; }
+std::ostream& operator<<( std::ostream& out, const chat_message& obj )
+{
+    out << obj.data_;
+    return out;
+}
+
+std::ostream& operator<<( std::ostream& out, const chat_room& obj )
+{
+    out << obj.m_name;
+    return out;
+}
+
+std::ostream& operator<<( std::ostream& out, const chat_session& obj )
+{
+    out << "chat_session(" << obj.room_ << ") " << obj.socket_.remote_endpoint();
+    return out;
+}
+
+std::ostream& operator<<( std::ostream& out, const chat_server& obj )
+{
+    out << "chat_server: " << obj.acceptor_.local_endpoint();
+    return out;
+}

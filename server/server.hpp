@@ -19,6 +19,8 @@
 #include <boost/asio.hpp>
 using boost::asio::ip::tcp;
 
+#include <msgpack.hpp>
+
 #include "utils.hpp"
 
 class chat_message
@@ -92,6 +94,8 @@ public:
         std::memcpy( data_, header, header_length );
     }
     
+    friend std::ostream& operator<<( std::ostream& out, const chat_message& obj );
+
 private:
     char data_[header_length + max_body_length];
     std::size_t body_length_;
@@ -100,26 +104,32 @@ private:
 class chat_participant
 {
 public:
+
+    typedef std::shared_ptr<chat_participant> pointer;
+    
     virtual ~chat_participant() {}
     virtual void deliver( const chat_message& msg ) = 0;
 };
 
-typedef std::deque<chat_message> chat_message_queue;
-typedef std::shared_ptr<chat_participant> chat_participant_ptr;
 
 //----------------------------------------------------------------------
 
 class chat_room
 {
 public:
-    void join( chat_participant_ptr participant );
-    void leave( chat_participant_ptr participant );
-    void deliver( const chat_message& msg );
+
+    chat_room( std::string name );
+
+    void join( chat_participant::pointer participant );
+    void leave( chat_participant::pointer participant );
+    void deliver( const chat_participant::pointer& sender, const chat_message& msg );
     
+    friend std::ostream& operator<<( std::ostream& out, const chat_room& obj );
+
 private:
-    std::set<chat_participant_ptr> participants_;
-    enum { max_recent_msgs = 100 };
-    chat_message_queue recent_msgs_;
+    typedef std::set<chat_participant::pointer> member_set;
+    member_set      m_members;
+    std::string     m_name;
 };
 
 class chat_session
@@ -132,15 +142,16 @@ public:
     void start();
     void deliver( const chat_message& msg );
     
+    friend std::ostream& operator<<( std::ostream& out, const chat_session& obj );
+    
 private:
     void do_read_header();
-    void do_read_body();
     void do_write();
     
     tcp::socket socket_;
     chat_room& room_;
     chat_message read_msg_;
-    chat_message_queue write_msgs_;
+    chat_message write_msg_;
 };
 
 //----------------------------------------------------------------------
@@ -151,6 +162,8 @@ public:
     chat_server( boost::asio::io_service& io_service,
                  const tcp::endpoint& endpoint );
                  
+    friend std::ostream& operator<<( std::ostream& out, const chat_server& obj );
+    
 private:
     void do_accept();
     
@@ -158,10 +171,3 @@ private:
     tcp::socket socket_;
     chat_room room_;
 };
-
-namespace std {
-    std::ostream& operator<<( std::ostream& out, const chat_message& obj );
-    std::ostream& operator<<( std::ostream& out, const chat_room& obj );
-    std::ostream& operator<<( std::ostream& out, const chat_session& obj );
-    std::ostream& operator<<( std::ostream& out, const chat_server& obj );
-}

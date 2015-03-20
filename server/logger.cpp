@@ -58,7 +58,7 @@ inline std::basic_ostream< CharT, TraitsT >& operator<< (
         "decode",
         "" // safety
     };
-
+    
     stream << names[lvl][0];
     return stream;
 }
@@ -82,15 +82,15 @@ void mk_stream_logger( S stream )
     // Create a backend and attach a couple of streams to it
     typedef sinks::text_ostream_backend backend_t;
     boost::shared_ptr<backend_t> backend = boost::make_shared<backend_t>();
-
+    
     backend->add_stream( stream );
     backend->auto_flush( true ); // enable auto-flushing after each log record written
-
+    
     typedef sinks::synchronous_sink<backend_t> sink_t;
     boost::shared_ptr< sink_t > sink = boost::make_shared<sink_t>( backend );
-
+    
     set_formatter( sink );
-
+    
     logging::core::get()->add_sink( sink );
 }
 
@@ -98,15 +98,15 @@ Logger::Logger()
 {
     // Add some attributes
     logging::add_common_attributes(); // TimeStamp, etc. http://boost-log.sourceforge.net/libs/log/doc/html/boost/log/add_common_attributes.html
-
+    
     boost::shared_ptr< logging::core > core = logging::core::get();
     core->add_global_attribute( "Scope", attrs::named_scope() );
-
+    
     // boost::log has a default sink that you can't delete, the only way to not log
     // anything to the console is to disable logging and then re-enable when any
     // cmdline option sets a logging sink
     core->set_logging_enabled( false );
-
+    
     set_level( Logger::info );
     enable_console();
 }
@@ -123,7 +123,7 @@ void Logger::set_level( severity_level level )
         LFC1_LOG_ERROR( _logger::get() ) << "trying to set invalid log level: " << ( int )level;
         return;
     }
-
+    
     LFC1_LOG_INFO( _logger::get() ) << "setting log level to: " << level;
     curr_level = level;
     logging::core::get()->set_filter( severity <= level );

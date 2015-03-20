@@ -63,7 +63,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
         exit( 0 );
     }
     
-    Logger::instance().set_level( (Logger::severity_level)opts["debug"].as<unsigned>() );
+    Logger::instance().set_level( ( Logger::severity_level )opts["debug"].as<unsigned>() );
     
     if( ! opts.count( "ports" ) )
     {
