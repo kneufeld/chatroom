@@ -26,79 +26,12 @@ using boost::asio::ip::tcp;
 class chat_message
 {
 public:
-    enum { header_length = 4 };
-    enum { max_body_length = 512 };
+    chat_message() {}
     
-    chat_message()
-        : body_length_( 0 )
-    {
-    }
+    std::string nickname;
+    std::string msg;
     
-    const char* data() const
-    {
-        return data_;
-    }
-    
-    char* data()
-    {
-        return data_;
-    }
-    
-    std::size_t length() const
-    {
-        return header_length + body_length_;
-    }
-    
-    const char* body() const
-    {
-        return data_ + header_length;
-    }
-    
-    char* body()
-    {
-        return data_ + header_length;
-    }
-    
-    std::size_t body_length() const
-    {
-        return body_length_;
-    }
-    
-    void body_length( std::size_t new_length )
-    {
-        body_length_ = new_length;
-        
-        if( body_length_ > max_body_length )
-            body_length_ = max_body_length;
-    }
-    
-    bool decode_header()
-    {
-        char header[header_length + 1] = "";
-        std::strncat( header, data_, header_length );
-        body_length_ = std::atoi( header );
-        
-        if( body_length_ > max_body_length )
-        {
-            body_length_ = 0;
-            return false;
-        }
-        
-        return true;
-    }
-    
-    void encode_header()
-    {
-        char header[header_length + 1] = "";
-        std::sprintf( header, "%4d", static_cast<int>( body_length_ ) );
-        std::memcpy( data_, header, header_length );
-    }
-    
-    friend std::ostream& operator<<( std::ostream& out, const chat_message& obj );
-
-private:
-    char data_[header_length + max_body_length];
-    std::size_t body_length_;
+    MSGPACK_DEFINE( nickname, msg );
 };
 
 class chat_participant
@@ -111,21 +44,18 @@ public:
     virtual void deliver( const chat_message& msg ) = 0;
 };
 
-
-//----------------------------------------------------------------------
-
 class chat_room
 {
 public:
 
     chat_room( std::string name );
-
+    
     void join( chat_participant::pointer participant );
     void leave( chat_participant::pointer participant );
     void deliver( const chat_participant::pointer& sender, const chat_message& msg );
     
     friend std::ostream& operator<<( std::ostream& out, const chat_room& obj );
-
+    
 private:
     typedef std::set<chat_participant::pointer> member_set;
     member_set      m_members;
@@ -145,13 +75,19 @@ public:
     friend std::ostream& operator<<( std::ostream& out, const chat_session& obj );
     
 private:
-    void do_read_header();
-    void do_write();
+    void do_read();
+    void read_msg_length();
+    void read_msg_body(unsigned msg_length);
+    void do_write(unsigned msg_length);
     
     tcp::socket socket_;
     chat_room& room_;
-    chat_message read_msg_;
-    chat_message write_msg_;
+    
+    typedef std::array<char, 1024> buffer_t;
+    buffer_t read_msg_;
+    buffer_t write_msg_;
+    
+    chat_message msg;
 };
 
 //----------------------------------------------------------------------
