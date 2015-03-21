@@ -35,12 +35,12 @@ private:
     
     bool feed_to_unpacker( const buffer_t& buffer, std::size_t length );
     
-    tcp::socket socket_;
-    posix::stream_descriptor input_;
-    posix::stream_descriptor output_;
-    buffer_t read_msg_;
-    buffer_t write_msg_;
-    boost::asio::streambuf input_buffer_;
+    tcp::socket m_socket;
+    posix::stream_descriptor m_stdin;
+    posix::stream_descriptor m_stdout;
+    buffer_t m_read_buffer;
+    buffer_t m_write_buffer;
+    boost::asio::streambuf m_input_buffer;
     
     std::string m_nickname;
     msgpack::unpacker m_unpacker;

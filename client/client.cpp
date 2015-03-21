@@ -9,30 +9,31 @@
 
 #include "client.hpp"
 
-using boost::asio::ip::tcp;
+namespace asio = boost::asio;
 namespace posix = boost::asio::posix;
+using asio::ip::tcp;
 
 
-posix_chat_client::posix_chat_client( boost::asio::io_service& io_service,
+posix_chat_client::posix_chat_client( asio::io_service& io_service,
                                       tcp::resolver::iterator endpoint_iterator,
                                       std::string nickname )
-    : socket_( io_service ),
-      input_( io_service, ::dup( STDIN_FILENO ) ),
-      output_( io_service, ::dup( STDOUT_FILENO ) ),
-      input_buffer_( max_msg_length )
+    : m_socket( io_service ),
+      m_stdin( io_service, ::dup( STDIN_FILENO ) ),
+      m_stdout( io_service, ::dup( STDOUT_FILENO ) ),
+      m_input_buffer( max_msg_length )
 {
     m_nickname = nickname;
     
     // attempt to connect to server, call handle_connect when we do
-    auto handler = boost::bind( &posix_chat_client::handle_connect, this, boost::asio::placeholders::error );
-    boost::asio::async_connect( socket_, endpoint_iterator, handler );
+    auto handler = boost::bind( &posix_chat_client::handle_connect, this, asio::placeholders::error );
+    asio::async_connect( m_socket, endpoint_iterator, handler );
 }
 
 void posix_chat_client::handle_connect( const boost::system::error_code& error )
 {
     if( error )
     {
-        std::cerr << "could not connect to " << socket_.remote_endpoint();
+        std::cerr << "could not connect to " << m_socket.remote_endpoint();
         return;
     }
     
@@ -43,16 +44,16 @@ void posix_chat_client::handle_connect( const boost::system::error_code& error )
 void posix_chat_client::read_socket()
 {
     // read from socket
-    auto buffers = boost::asio::buffer( read_msg_, 1024 );
-    auto handler = boost::bind( &posix_chat_client::cb_read_socket, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred );
-    socket_.async_read_some( buffers, handler );
+    auto buffers = asio::buffer( m_read_buffer, 1024 );
+    auto handler = boost::bind( &posix_chat_client::cb_read_socket, this, asio::placeholders::error, asio::placeholders::bytes_transferred );
+    m_socket.async_read_some( buffers, handler );
 }
 
 void posix_chat_client::read_input()
 {
     // read from console until newline
-    auto handler = boost::bind( &posix_chat_client::cb_read_input, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred );
-    boost::asio::async_read_until( input_, input_buffer_, '\n', handler );
+    auto handler = boost::bind( &posix_chat_client::cb_read_input, this, asio::placeholders::error, asio::placeholders::bytes_transferred );
+    asio::async_read_until( m_stdin, m_input_buffer, '\n', handler );
 }
 
 void posix_chat_client::cb_read_socket( const boost::system::error_code& error, std::size_t bytes_recv )
@@ -64,27 +65,20 @@ void posix_chat_client::cb_read_socket( const boost::system::error_code& error, 
         return;
     }
     
-    if( feed_to_unpacker( read_msg_, bytes_recv ) )
+    if( feed_to_unpacker( m_read_buffer, bytes_recv ) )
     {
-        static std::stringstream ss;
-        ss.str( "" );
+        static std::string output;
+
+        std::stringstream ss;
         ss << m_msg.nickname << ": " << m_msg.message << std::endl;
-        
-        static char eol[] = { '\n' };
-        boost::array<boost::asio::const_buffer, 2> buffers =
-        {
-            boost::asio::buffer( ss.str(), ss.str().size() ),
-            boost::asio::buffer( eol )
-        };
+        output = ss.str();
         
         // write out the message we just received, terminated by a newline.
-        auto handler = boost::bind( &posix_chat_client::cb_write_output, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred );
-        boost::asio::async_write( output_, buffers, handler );
+        auto buffer = asio::buffer( output.data(), output.size() );
+        asio::write( m_stdout, buffer );
     }
-    else
-    {
-        read_socket(); // read more bytes
-    }
+
+    read_socket(); // read more bytes
 }
 
 void posix_chat_client::cb_write_socket( const boost::system::error_code& error, std::size_t length )
@@ -103,7 +97,7 @@ void posix_chat_client::cb_read_input( const boost::system::error_code& error, s
 {
     if( error )
     {
-        if( error == boost::asio::error::not_found )
+        if( error == asio::error::not_found )
         {
             // didn't get a newline, wait for more data
             read_input();
@@ -115,45 +109,42 @@ void posix_chat_client::cb_read_input( const boost::system::error_code& error, s
         return;
     }
     
-    length = input_buffer_.size() - 1; // no newline
+    length = m_input_buffer.size() - 1; // no newline
     
-    // consume and write input_buffer_ to write_msg_
-    input_buffer_.sgetn( write_msg_.data(), length );
-    input_buffer_.consume( 1 ); // remove newline from input
+    // consume and write m_input_buffer to m_write_buffer
+    m_input_buffer.sgetn( m_write_buffer.data(), length );
+    m_input_buffer.consume( 1 ); // remove newline from input
     
     // populate m_msg
-    m_msg.message = std::move( std::string( write_msg_.data(), write_msg_.data() + length ) );
+    m_msg.message = std::move( std::string( m_write_buffer.data(), m_write_buffer.data() + length ) );
     m_msg.nickname = m_nickname;
     //std::cout << m_msg.nickname << ": " << m_msg.message << std::endl;
     
     // msgpack m_msg and then send it
     m_packer.clear();
     msgpack::pack( m_packer, m_msg );
-    auto buffers = boost::asio::buffer( m_packer.data(), m_packer.size() );
-    auto handler = boost::bind( &posix_chat_client::cb_write_socket, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred );
-    boost::asio::async_write( socket_, buffers, handler );
+    auto buffers = asio::buffer( m_packer.data(), m_packer.size() );
+    auto handler = boost::bind( &posix_chat_client::cb_write_socket, this, asio::placeholders::error, asio::placeholders::bytes_transferred );
+    asio::async_write( m_socket, buffers, handler );
 }
 
 void posix_chat_client::cb_write_output( const boost::system::error_code& error, std::size_t bytes_written )
 {
-    if( !error )
-    {
-        read_socket();
-    }
-    else
+    if( error )
     {
         close();
+        return;
     }
+
+    read_socket();
 }
 
 void posix_chat_client::close()
 {
     // cancel all outstanding asynchronous operations.
-    socket_.close();
-    input_.close();
-    output_.close();
-    
-    //std::cout << "closing all connections" << std::endl;
+    m_socket.close();
+    m_stdin.close();
+    m_stdout.close();
 }
 
 bool posix_chat_client::feed_to_unpacker( const buffer_t& buffer, std::size_t length )
