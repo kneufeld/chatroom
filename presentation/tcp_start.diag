@@ -1,5 +1,5 @@
 seqdiag {
-    default_fontsize = 16;  // default value is 11
+    default_fontsize = 20;
 
     client; acceptor; connection;
 
