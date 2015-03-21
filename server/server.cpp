@@ -104,7 +104,8 @@ void chat_session::do_read()
             return;
         }
         
-        // feed data to unpacker
+        // feed data to unpacker, need to decode incoming bytes
+        // because we only want to send full messages
         m_unpacker.reserve_buffer( length );
         std::copy( m_read_buff.data(), m_read_buff.data() + length, m_unpacker.buffer() );
         m_unpacker.buffer_consumed( length );

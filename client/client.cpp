@@ -105,8 +105,6 @@ private:
 
     void do_read_body()
     {
-        boost::asio::streambuf buffer;
-
         socket_.async_read_some(
             boost::asio::buffer( read_msg_.data(), 1024 ),
             [this]( boost::system::error_code ec, std::size_t length )
