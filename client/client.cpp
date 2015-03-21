@@ -59,7 +59,7 @@ void posix_chat_client::cb_read_socket( const boost::system::error_code& error, 
 {
     if( error )
     {
-        std::cerr << "error: " << error.message();
+        std::cerr << "socket error: " << error.message() << std::endl;
         close();
         return;
     }
@@ -110,7 +110,7 @@ void posix_chat_client::cb_read_input( const boost::system::error_code& error, s
             return;
         }
         
-        std::cerr << "had console input error: " << error.message() << std::endl;
+        std::cerr << "console error: " << error.message() << std::endl;
         close();
         return;
     }
@@ -155,7 +155,7 @@ void posix_chat_client::close()
     input_.close();
     output_.close();
     
-    std::cout << "closed all connections";
+    //std::cout << "closing all connections" << std::endl;
 }
 
 bool posix_chat_client::feed_to_unpacker( const buffer_t& buffer, std::size_t length )
