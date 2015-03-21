@@ -1,14 +1,13 @@
 
-#include <iostream>
 #include <boost/bind.hpp>
 
-#include "utils.hpp"
+#include "logger.hpp"
 #include "signals.hpp"
 
 using namespace std;
 
-SignalHandler::SignalHandler()
-    : signals( IOS(), SIGINT, SIGTERM )
+SignalHandler::SignalHandler( boost::asio::io_service& ios )
+    : signals( ios, SIGINT, SIGTERM )
 {
     wait_for_signal();
 }
@@ -18,24 +17,22 @@ void SignalHandler::signal_handler( const boost::system::error_code& error, int 
 {
     if( error )
     {
-        // FIXME
-        //TL_ERROR( "received signal handler error: %s. stopping tacar", error.message().c_str() );
-        IOS().stop();
+        TL_S_ERROR << "error: " << error.message();
+        signals.get_io_service().stop();
         return;
     }
     
     switch( signal_number )
     {
     case SIGUSR1: case SIGUSR2:
-        //TL_INFO( "received signal: %d, ignoring", signal_number );
+        TL_S_INFO << "caught signal: " << signal_number << " ignoring";
         wait_for_signal();
         break;
         
     case SIGHUP: case SIGINT: case SIGQUIT: case SIGKILL:
     default: // for now, just exit on any signal
-        //TL_INFO( "received signal: %d, stopping tacar", signal_number );
-        cout << "caught signal, exiting..." << endl;
-        IOS().stop();
+        TL_S_INFO << "caught signal: " << signal_number << " exiting";
+        signals.get_io_service().stop();
         break;
     }
 }

@@ -104,25 +104,33 @@ void chat_session::do_read()
             return;
         }
         
-        // feed data to unpacker, need to decode incoming bytes
-        // because we only want to send full messages
-        m_unpacker.reserve_buffer( length );
-        std::copy( m_read_buff.data(), m_read_buff.data() + length, m_unpacker.buffer() );
-        m_unpacker.buffer_consumed( length );
-        
-        // maybe-get object out of it
-        msgpack::unpacked result;
-        
-        if( m_unpacker.next( &result ) )
+        try
         {
-            chat_message msg;
-            result.get().convert( &msg );
-            TL_S_DEBUG << *this << ": " << msg.nickname << ": " << msg.msg;
+            // feed data to unpacker, need to decode incoming bytes
+            // because we only want to send full messages
+            m_unpacker.reserve_buffer( length );
+            std::copy( m_read_buff.data(), m_read_buff.data() + length, m_unpacker.buffer() );
+            m_unpacker.buffer_consumed( length );
             
-            room_.deliver( self, msg );
+            // maybe-get object out of it
+            msgpack::unpacked result;
+            
+            if( m_unpacker.next( &result ) )
+            {
+                chat_message msg;
+                result.get().convert( &msg );
+                TL_S_DEBUG << *this << ": " << msg.nickname << ": " << msg.msg;
+                
+                room_.deliver( self, msg );
+            }
+            
+            do_read();
         }
-        
-        do_read();
+        catch( std::bad_cast& e )
+        {
+            TL_S_ERROR << *this << ": client sent garbage, dropping";
+            room_.leave( self );
+        }
     } );
 }
 

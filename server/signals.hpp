@@ -7,7 +7,7 @@ class SignalHandler
 {
 public:
 
-    SignalHandler();
+    SignalHandler( boost::asio::io_service& ios );
     
 private:
 

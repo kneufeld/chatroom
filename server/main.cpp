@@ -85,16 +85,18 @@ int main( int argc, char* argv[] )
     
     try
     {
-        SignalHandler handler;
+        boost::asio::io_service ios;
+
+        SignalHandler handler(ios);
         std::list<chat_server> servers;
         
         for( auto port : opts["ports"].as< std::vector<unsigned> >() )
         {
             tcp::endpoint endpoint( tcp::v4(), port );
-            servers.emplace_back( IOS(), endpoint );
+            servers.emplace_back( ios, endpoint );
         }
         
-        IOS().run();
+        ios.run();
     }
     catch( std::exception& e )
     {

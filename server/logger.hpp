@@ -38,19 +38,6 @@ private:
 
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT( _logger, boost::log::sources::severity_logger<Logger::severity_level> )
 
-// in TL_SEND it's a while to eliminate the possibility of interfering with an if/else that's not using brackets
-#define TL_INSTANCE Logger::instance
-#define TL_WRITE TL_INSTANCE().Write
-#define TL_SEND(level, prefix, ... ) while( TL_INSTANCE().curr_level >= level ) { TL_WRITE( level, __FILE__, __LINE__, prefix, ##__VA_ARGS__ ); break; }
-
-#define TL_DECODE( prefix, ... )    TL_SEND( Logger::decode,   prefix, ##__VA_ARGS__ );
-#define TL_TRACE( prefix, ... )     TL_SEND( Logger::trace,    prefix, ##__VA_ARGS__ );
-#define TL_DEBUG( prefix, ... )     TL_SEND( Logger::debug,    prefix, ##__VA_ARGS__ );
-#define TL_INFO( prefix, ... )      TL_SEND( Logger::info,     prefix, ##__VA_ARGS__ );
-#define TL_WARNING( prefix, ... )   TL_SEND( Logger::warning,  prefix, ##__VA_ARGS__ );
-#define TL_WARN( prefix, ... )      TL_SEND( Logger::warning,  prefix, ##__VA_ARGS__ );
-#define TL_ERROR( prefix, ... )     TL_SEND( Logger::error,    prefix, ##__VA_ARGS__ );
-#define TL_FATAL( prefix, ... )     TL_SEND( Logger::fatal,    prefix, ##__VA_ARGS__ );
 
 // boost::log correctly shortcuts evaluating the input line if the set log level is higher than incoming message
 #define TL_STREAM(level)    BOOST_LOG_SEV( _logger::get(), level ) << __FILE__ << ":" << __LINE__ << " "

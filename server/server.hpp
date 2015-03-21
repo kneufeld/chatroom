@@ -16,8 +16,6 @@ using boost::asio::ip::tcp;
 
 #include <msgpack.hpp>
 
-#include "utils.hpp"
-
 class chat_message
 {
 public:
