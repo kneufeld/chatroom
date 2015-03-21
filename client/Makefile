@@ -179,4 +179,4 @@ show.%:
 	@echo $*=\"$($*)\"
 
 astyle:
-	astyle *.cpp
+	astyle *.cpp *.hpp
