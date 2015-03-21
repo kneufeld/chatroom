@@ -4,13 +4,14 @@ seqdiag {
     client; acceptor; connection;
 
     client     ->> acceptor [label="connect"]
-    acceptor    ->> acceptor [label="accept"] 
+    acceptor    -> acceptor [label="accept"] 
     acceptor    -> connection [label="create"] 
     acceptor    <-- connection
     client      <-- acceptor
 
     acceptor    -->> acceptor [label="waiting"] 
 
-    client      => connection [rightnote="communicate"] 
+    client      -> connection [label="send", rightnote="communicate"] 
+    client      <- connection [label="recv"] 
 }
 // vi: ft=dot expandtab
