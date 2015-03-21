@@ -1,0 +1,16 @@
+seqdiag {
+    default_fontsize = 16;  // default value is 11
+
+    client; acceptor; connection;
+
+    client     ->> acceptor [label="connect"]
+    acceptor    ->> acceptor [label="accept"] 
+    acceptor    -> connection [label="create"] 
+    acceptor    <-- connection
+    client      <-- acceptor
+
+    acceptor    -->> acceptor [label="waiting"] 
+
+    client      => connection [rightnote="communicate"] 
+}
+// vi: ft=dot expandtab

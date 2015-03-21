@@ -1,0 +1,23 @@
+seqdiag {
+      // Set fontsize.
+  default_fontsize = 16;  // default value is 11
+
+  // Do not show activity line
+  //activation = none;
+
+    socket; network; console; user;
+
+    //socket      -->> socket [label = "waiting"];
+    socket <<- network [label="write"];
+    socket      --> socket [label = "unpack"];
+    socket      ->  console [label="write"];
+    socket      <-- console;
+
+    //console     -->> console [label = "waiting"];
+    user        ->> console [label="types"];
+    console      --> console [label = "pack"];
+    console      ->>  network [label="write"];
+    console      <<-- network;
+}
+
+// vi: ft=dot expandtab
