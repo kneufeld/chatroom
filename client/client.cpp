@@ -127,11 +127,9 @@ void posix_chat_client::cb_read_input( const boost::system::error_code& error, s
     //std::cout << m_msg.nickname << ": " << m_msg.message << std::endl;
     
     // msgpack m_msg and then send it
-    msgpack::sbuffer sbuf;
-    msgpack::pack( sbuf, m_msg );
-    std::copy( sbuf.data(), sbuf.data() + sbuf.size(), write_msg_.begin() );
-    
-    auto buffers = boost::asio::buffer( write_msg_, sbuf.size() );
+    m_packer.clear();
+    msgpack::pack( m_packer, m_msg );
+    auto buffers = boost::asio::buffer( m_packer.data(), m_packer.size() );
     auto handler = boost::bind( &posix_chat_client::cb_write_socket, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred );
     boost::asio::async_write( socket_, buffers, handler );
 }

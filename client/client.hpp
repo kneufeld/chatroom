@@ -44,5 +44,6 @@ private:
     
     std::string m_nickname;
     msgpack::unpacker m_unpacker;
+    msgpack::sbuffer  m_packer;
     chat_message m_msg;
 };
