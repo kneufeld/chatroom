@@ -31,8 +31,8 @@ DEFINES=-DBOOST_ALL_DYN_LINK
 
 LDFLAGS = -L/usr/local/opt/cppunit/lib -L/usr/local/opt/boost/lib
 _LIBS = -lboost_system -lboost_program_options -lboost_thread -lboost_log_setup -lboost_log -lboost_program_options -lboost_filesystem
-#LIBS=$(addsuffix -mt,$(_LIBS))
-LIBS=$(_LIBS) -lpthread
+LIBS=$(addsuffix -mt,$(_LIBS))
+#LIBS=$(_LIBS) -lpthread
 LIBS += -lmsgpack
 
 ## Run make command in these directories
