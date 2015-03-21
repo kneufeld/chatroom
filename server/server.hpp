@@ -76,18 +76,17 @@ public:
     
 private:
     void do_read();
-    void read_msg_length();
-    void read_msg_body(unsigned msg_length);
-    void do_write(unsigned msg_length);
+    void do_write();
     
     tcp::socket socket_;
     chat_room& room_;
     
     typedef std::array<char, 1024> buffer_t;
-    buffer_t read_msg_;
-    buffer_t write_msg_;
+    buffer_t m_read_buff;
+    buffer_t m_write_buff;
     
-    chat_message msg;
+    msgpack::unpacker m_unpacker;
+    chat_message m_msg;
 };
 
 //----------------------------------------------------------------------

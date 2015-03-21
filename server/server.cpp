@@ -76,16 +76,15 @@ void chat_session::start()
 void chat_session::do_read()
 {
     TL_S_TRACE << *this << ": listening to " << socket_.remote_endpoint();
-    read_msg_length();
-}
-
-void chat_session::read_msg_length()
-{
+    
     auto self( shared_from_this() );
-    boost::asio::async_read( socket_,
-                             boost::asio::buffer( read_msg_.data(), 1 ),
-                             [this, self]( boost::system::error_code ec, std::size_t length )
+    
+    socket_.async_read_some(
+        boost::asio::buffer( m_read_buff.data(), 1024 ),
+        [this, self]( boost::system::error_code ec, std::size_t length )
     {
+        TL_S_TRACE << *this << ": recv'd " << length << " bytes";
+        
         if( ec )
         {
             if( ec == boost::asio::error::operation_aborted )
@@ -105,59 +104,22 @@ void chat_session::read_msg_length()
             return;
         }
         
-        TL_S_TRACE << *this << ": received " << length << " bytes";
-
-        unsigned msg_length = (unsigned)read_msg_[0];
-        TL_S_DEBUG << *this << ": incoming msg will be " << msg_length << " bytes";
-
-        read_msg_body(msg_length);
-    });
-}
-
-void chat_session::read_msg_body( unsigned msg_length )
-{
-    auto self( shared_from_this() );
-    boost::asio::async_read( socket_,
-                             boost::asio::buffer( read_msg_.data(), msg_length ),
-                             [this, self]( boost::system::error_code ec, std::size_t length )
-    {
-        if( ec )
+        // feed data to unpacker
+        m_unpacker.reserve_buffer( length );
+        std::copy( m_read_buff.data(), m_read_buff.data() + length, m_unpacker.buffer() );
+        m_unpacker.buffer_consumed( length );
+        
+        // maybe-get object out of it
+        msgpack::unpacked result;
+        
+        if( m_unpacker.next( &result ) )
         {
-            if( ec == boost::asio::error::operation_aborted )
-            {
-                TL_S_DEBUG << *this << ": connection closed by us";
-            }
-            else if( ec == boost::asio::error::eof )
-            {
-                TL_S_DEBUG << *this << ": connection closed by them";
-            }
-            else
-            {
-                TL_S_WARN << *this << ": error: " << ec.message();
-            }
+            chat_message msg;
+            result.get().convert( &msg );
+            TL_S_DEBUG << *this << ": " << msg.nickname << ": " << msg.msg;
             
-            room_.leave( self );
-            return;
+            room_.deliver( self, msg );
         }
-        
-        TL_S_TRACE << *this << ": received " << length << " bytes";
-
-        try
-        {
-            msgpack::zone zone;
-            msgpack::object obj;
-            msgpack::unpack( read_msg_.data(), length, NULL, &zone, &obj );
-            obj.convert( &msg );
-        }
-        catch( std::bad_cast& e )
-        {
-            TL_S_ERROR << *this << ": recv'd bad message, closing connection";
-            room_.leave(self);
-            return;
-        }
-        
-        TL_S_DEBUG << *this << ": msg from: " << msg.nickname; 
-        room_.deliver( self, msg );
         
         do_read();
     } );
@@ -165,21 +127,19 @@ void chat_session::read_msg_body( unsigned msg_length )
 
 void chat_session::deliver( const chat_message& msg )
 {
-    msgpack::sbuffer sbuf;
-    msgpack::pack(sbuf, msg);
-
-    memcpy( write_msg_.data(), sbuf.data(), sbuf.size() );
-    do_write(sbuf.size());
+    m_msg = msg;
+    do_write();
 }
 
-void chat_session::do_write(unsigned msg_length)
+void chat_session::do_write()
 {
-    std::array<char,1> b = { (char)msg_length };
-    boost::asio::write( socket_, boost::asio::buffer( b, 1 ) );
-
+    msgpack::sbuffer sbuf;
+    msgpack::pack( sbuf, m_msg );
+    std::copy( sbuf.data(), sbuf.data() + sbuf.size(), m_write_buff.begin() );
+    
     auto self( shared_from_this() );
     boost::asio::async_write( socket_,
-                              boost::asio::buffer( write_msg_.data(), msg_length ),
+                              boost::asio::buffer( m_write_buff.data(), sbuf.size() ),
                               [this, self]( boost::system::error_code ec, std::size_t length )
     {
         if( !ec )
