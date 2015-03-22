@@ -68,7 +68,7 @@ void posix_chat_client::cb_read_socket( const boost::system::error_code& error, 
     if( feed_to_unpacker( m_read_buffer, bytes_recv ) )
     {
         std::stringstream ss;
-        ss << m_msg.nickname << ": " << m_msg.message << std::endl;
+        ss << m_msg << std::endl;
         std::string output = ss.str();
 
         // sync write out the message we just received, terminated by a newline.

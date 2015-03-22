@@ -119,8 +119,8 @@ void chat_session::do_read()
             {
                 chat_message msg;
                 result.get().convert( &msg );
-                TL_S_DEBUG << *this << ": " << msg.nickname << ": " << msg.msg;
-                
+                TL_S_DEBUG << *this << ": " << msg;
+
                 room_.deliver( self, msg );
             }
             
@@ -188,15 +188,9 @@ void chat_server::do_accept()
             TL_S_INFO << "accepted connection from: " << socket_.remote_endpoint();
             std::make_shared<chat_session>( std::move( socket_ ), room_ )->start();
         }
-        
+
         do_accept();
     } );
-}
-
-std::ostream& operator<<( std::ostream& out, const chat_message& obj )
-{
-    //out << obj.payload.length();
-    return out;
 }
 
 std::ostream& operator<<( std::ostream& out, const chat_room& obj )

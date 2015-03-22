@@ -16,16 +16,7 @@ using boost::asio::ip::tcp;
 
 #include <msgpack.hpp>
 
-class chat_message
-{
-public:
-    chat_message() {}
-    
-    std::string nickname;
-    std::string msg;
-    
-    MSGPACK_DEFINE( nickname, msg );
-};
+#include "common.hpp"
 
 class chat_participant
 {
