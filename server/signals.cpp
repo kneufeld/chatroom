@@ -21,14 +21,14 @@ void SignalHandler::signal_handler( const boost::system::error_code& error, int 
         signals.get_io_service().stop();
         return;
     }
-    
+
     switch( signal_number )
     {
     case SIGUSR1: case SIGUSR2:
         TL_S_INFO << "caught signal: " << signal_number << " ignoring";
         wait_for_signal();
         break;
-        
+
     case SIGHUP: case SIGINT: case SIGQUIT: case SIGKILL:
     default: // for now, just exit on any signal
         TL_S_INFO << "caught signal: " << signal_number << " exiting";

@@ -17,23 +17,23 @@ public:
         trace,      // 5
         decode      // 6
     };
-    
+
     static Logger& instance()
     {
         static Logger instance;
         return instance;
     }
-    
+
     void set_level( severity_level level );
     void enable_console();
-    
+
     severity_level curr_level; // the current log level, used to shortcut potentially unnecessary "to_string()" calls
-    
+
 private:
 
     Logger();
     ~Logger();
-    
+
 };
 
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT( _logger, boost::log::sources::severity_logger<Logger::severity_level> )

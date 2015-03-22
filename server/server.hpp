@@ -18,43 +18,18 @@ using boost::asio::ip::tcp;
 
 #include "common.hpp"
 
-class chat_participant
+class chat_room;
+
+class chat_session : public std::enable_shared_from_this<chat_session>
 {
 public:
+    typedef std::shared_ptr<chat_session> pointer;
 
-    typedef std::shared_ptr<chat_participant> pointer;
-
-    virtual ~chat_participant() {}
-    virtual void deliver( const chat_message& msg ) = 0;
-};
-
-class chat_room
-{
-public:
-
-    chat_room( std::string name );
-
-    void join( chat_participant::pointer participant );
-    void leave( chat_participant::pointer participant );
-    void deliver( const chat_participant::pointer& sender, const chat_message& msg );
-
-    friend std::ostream& operator<<( std::ostream& out, const chat_room& obj );
-
-private:
-    typedef std::set<chat_participant::pointer> member_set;
-    member_set      m_members;
-    std::string     m_name;
-};
-
-class chat_session
-    : public chat_participant,
-      public std::enable_shared_from_this<chat_session>
-{
-public:
     chat_session( tcp::socket socket, chat_room& room );
 
     void start();
     void deliver( const chat_message& msg );
+    void close();
 
     friend std::ostream& operator<<( std::ostream& out, const chat_session& obj );
 
@@ -70,7 +45,26 @@ private:
     buffer_t m_write_buff;
 
     msgpack::unpacker m_unpacker;
+    msgpack::sbuffer  m_packer;
     chat_message m_msg;
+};
+
+class chat_room
+{
+public:
+
+    chat_room( std::string name );
+
+    void join( chat_session::pointer member );
+    void leave( chat_session::pointer member );
+    void deliver( chat_session::pointer sender, const chat_message& msg );
+
+    friend std::ostream& operator<<( std::ostream& out, const chat_room& obj );
+
+private:
+    typedef std::set<chat_session::pointer> member_set;
+    member_set      m_members;
+    std::string     m_name;
 };
 
 //----------------------------------------------------------------------

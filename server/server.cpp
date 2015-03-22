@@ -33,25 +33,24 @@ chat_room::chat_room( std::string name )
     m_name = name;
 }
 
-void chat_room::join( chat_participant::pointer participant )
+void chat_room::join( chat_session::pointer member )
 {
-    m_members.insert( participant );
-    TL_S_TRACE << *this << ": adding member, new length: " << m_members.size();
+    m_members.insert( member );
+    TL_S_INFO << *this << ": adding member, new length: " << m_members.size();
 }
 
-void chat_room::leave( chat_participant::pointer participant )
+void chat_room::leave( chat_session::pointer member )
 {
-    m_members.erase( participant );
-    TL_S_TRACE << *this << ": removing member, new length: " << m_members.size();
+    m_members.erase( member );
+    TL_S_INFO << *this << ": removing member, new length: " << m_members.size();
 }
 
-void chat_room::deliver( const chat_participant::pointer& sender, const chat_message& msg )
+void chat_room::deliver( chat_session::pointer sender, const chat_message& msg )
 {
     for( auto member : m_members )
     {
         if( sender != member )
         {
-            TL_S_TRACE << *this <<  ": delivering";
             member->deliver( msg );
         }
     }
@@ -75,7 +74,7 @@ void chat_session::start()
 
 void chat_session::do_read()
 {
-    TL_S_TRACE << *this << ": listening to " << socket_.remote_endpoint();
+    //TL_S_TRACE << *this << ": listening to " << socket_.remote_endpoint();
 
     auto self( shared_from_this() );
 
@@ -89,18 +88,18 @@ void chat_session::do_read()
         {
             if( ec == boost::asio::error::operation_aborted )
             {
-                TL_S_DEBUG << *this << ": connection closed by us";
+                TL_S_DEBUG << /**self <<*/ ": connection closed by us";
             }
             else if( ec == boost::asio::error::eof )
             {
-                TL_S_DEBUG << *this << ": connection closed by them";
+                TL_S_DEBUG << /**self <<*/ ": connection closed by them";
             }
             else
             {
-                TL_S_WARN << *this << ": error: " << ec.message();
+                TL_S_WARN << /**self <<*/ ": error: " << ec.message();
             }
 
-            room_.leave( self );
+            close();
             return;
         }
 
@@ -119,7 +118,7 @@ void chat_session::do_read()
             {
                 chat_message msg;
                 result.get().convert( &msg );
-                TL_S_DEBUG << *this << ": " << msg;
+                TL_S_DEBUG << *self << ": " << msg;
 
                 room_.deliver( self, msg );
             }
@@ -128,8 +127,8 @@ void chat_session::do_read()
         }
         catch( std::bad_cast& e )
         {
-            TL_S_ERROR << *this << ": client sent garbage, dropping";
-            room_.leave( self );
+            TL_S_ERROR << *self << ": client sent garbage, dropping";
+            close();
         }
     } );
 }
@@ -142,24 +141,32 @@ void chat_session::deliver( const chat_message& msg )
 
 void chat_session::do_write()
 {
-    msgpack::sbuffer sbuf;
-    msgpack::pack( sbuf, m_msg );
-    std::copy( sbuf.data(), sbuf.data() + sbuf.size(), m_write_buff.begin() );
+    TL_S_TRACE << *this <<  ": delivering";
 
+    m_packer.clear();
+    msgpack::pack( m_packer, m_msg );
+
+    auto buffer = boost::asio::buffer( m_packer.data(), m_packer.size() );
     auto self( shared_from_this() );
-    boost::asio::async_write( socket_,
-                              boost::asio::buffer( m_write_buff.data(), sbuf.size() ),
+    boost::asio::async_write( socket_, buffer,
                               [this, self]( boost::system::error_code ec, std::size_t length )
     {
-        if( !ec )
+        if( ec )
         {
-            TL_S_TRACE << *self << ": wrote " << length << " bytes";
+            TL_S_ERROR << "do_write error: " << ec.message();
+            close();
         }
         else
         {
-            room_.leave( self );
+            TL_S_TRACE << *self << ": wrote " << length << " bytes";
         }
     } );
+}
+
+void chat_session::close()
+{
+    auto self( shared_from_this() );
+    room_.leave( self );
 }
 
 //----------------------------------------------------------------------
@@ -201,7 +208,7 @@ std::ostream& operator<<( std::ostream& out, const chat_room& obj )
 
 std::ostream& operator<<( std::ostream& out, const chat_session& obj )
 {
-    out << obj.room_ << "-" << obj.socket_.remote_endpoint();
+    //out << obj.room_;// << "-" << (obj.socket_.is_open() ? obj.socket_.remote_endpoint() : "");
     return out;
 }
 

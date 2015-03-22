@@ -81,7 +81,7 @@ int main( int argc, char* argv[] )
     {
         boost::asio::io_service ios;
 
-        SignalHandler handler(ios);
+        SignalHandler handler( ios );
         std::list<chat_server> servers;
 
         for( auto port : opts["ports"].as< std::vector<unsigned> >() )
