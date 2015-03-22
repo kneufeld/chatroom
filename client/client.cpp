@@ -127,17 +127,6 @@ void posix_chat_client::cb_read_input( const boost::system::error_code& error, s
     asio::async_write( m_socket, buffer, handler );
 }
 
-void posix_chat_client::cb_write_output( const boost::system::error_code& error, std::size_t bytes_written )
-{
-    if( error )
-    {
-        close();
-        return;
-    }
-
-    listen_on_socket();
-}
-
 void posix_chat_client::close()
 {
     // cancel all outstanding asynchronous operations.
