@@ -76,15 +76,15 @@ void chat_session::start()
 void chat_session::do_read()
 {
     TL_S_TRACE << *this << ": listening to " << socket_.remote_endpoint();
-    
+
     auto self( shared_from_this() );
-    
+
     socket_.async_read_some(
         boost::asio::buffer( m_read_buff.data(), 1024 ),
         [this, self]( boost::system::error_code ec, std::size_t length )
     {
         TL_S_TRACE << *this << ": recv'd " << length << " bytes";
-        
+
         if( ec )
         {
             if( ec == boost::asio::error::operation_aborted )
@@ -99,11 +99,11 @@ void chat_session::do_read()
             {
                 TL_S_WARN << *this << ": error: " << ec.message();
             }
-            
+
             room_.leave( self );
             return;
         }
-        
+
         try
         {
             // feed data to unpacker, need to decode incoming bytes
@@ -111,10 +111,10 @@ void chat_session::do_read()
             m_unpacker.reserve_buffer( length );
             std::copy( m_read_buff.data(), m_read_buff.data() + length, m_unpacker.buffer() );
             m_unpacker.buffer_consumed( length );
-            
+
             // maybe-get object out of it
             msgpack::unpacked result;
-            
+
             if( m_unpacker.next( &result ) )
             {
                 chat_message msg;
@@ -123,7 +123,7 @@ void chat_session::do_read()
 
                 room_.deliver( self, msg );
             }
-            
+
             do_read();
         }
         catch( std::bad_cast& e )
@@ -145,7 +145,7 @@ void chat_session::do_write()
     msgpack::sbuffer sbuf;
     msgpack::pack( sbuf, m_msg );
     std::copy( sbuf.data(), sbuf.data() + sbuf.size(), m_write_buff.begin() );
-    
+
     auto self( shared_from_this() );
     boost::asio::async_write( socket_,
                               boost::asio::buffer( m_write_buff.data(), sbuf.size() ),
