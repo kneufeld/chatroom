@@ -33,7 +33,7 @@ void posix_chat_client::handle_connect( const boost::system::error_code& error )
 {
     if( error )
     {
-        std::cerr << "could not connect to " << m_socket.remote_endpoint();
+        std::cerr << "could not connect to " << m_socket.remote_endpoint() << std::endl;
         return;
     }
 
@@ -145,18 +145,17 @@ bool posix_chat_client::feed_to_unpacker( const buffer_t& buffer, std::size_t le
         std::copy( buffer.data(), buffer.data() + length, m_unpacker.buffer() );
         m_unpacker.buffer_consumed( length );
 
-        // maybe-get object out of it
+        // maybe get object out of it
         msgpack::unpacked result;
 
         if( m_unpacker.next( &result ) )
         {
-            chat_message msg;
             result.get().convert( &m_msg );
         }
     }
     catch( std::bad_cast& e )
     {
-        std::cerr << "server sent garbage, closing";
+        std::cerr << "server sent garbage, closing" << std::endl;
         close();
         return false;
     }
