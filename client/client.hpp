@@ -23,11 +23,11 @@ private:
 
     void handle_connect( const boost::system::error_code& error );
     
-    void read_socket();
+    void listen_on_socket();
     void cb_read_socket( const boost::system::error_code& error, std::size_t bytes_recv );
     void cb_write_socket( const boost::system::error_code& error, std::size_t length );
     
-    void read_input();
+    void listen_on_input();
     void cb_read_input( const boost::system::error_code& error, std::size_t length );
     void cb_write_output( const boost::system::error_code& error, std::size_t bytes_written );
     
