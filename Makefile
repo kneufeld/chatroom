@@ -26,7 +26,7 @@ LDFLAGS = -L. -L$(SRC_DIR) -L/usr/local/lib
 LIBS =
 
 ## Run make command in these directories
-SUBDIRS = server client
+SUBDIRS = server client hammer
 
 ## un/comment for debug symbols in executable
 DEBUG = -g
