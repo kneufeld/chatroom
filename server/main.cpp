@@ -32,7 +32,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     desc.add_options()
     ( "help,h", "show help" )
     ( "debug,d", po::value<unsigned>()->implicit_value( Logger::debug )->default_value( Logger::info ), "enable debug logging" )
-    ( "ports", po::value<std::vector<unsigned> >(), "listen on ports" )
+    ( "ports", po::value<std::vector<unsigned> >()->required(), "listen on ports" )
     ;
     
     po::positional_options_description pd;
@@ -64,13 +64,7 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     }
     
     Logger::instance().set_level( ( Logger::severity_level )opts["debug"].as<unsigned>() );
-    
-    if( ! opts.count( "ports" ) )
-    {
-        cerr << "must specifiy at least one port to listen on" << endl;
-        return false;
-    }
-    
+
     return true;
 }
 
