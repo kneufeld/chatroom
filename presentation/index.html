@@ -40,7 +40,6 @@ dt { text-align: left; }
 .reveal img { vertical-align: middle; }
 img { background-color: white !important; }
 #who_is img { margin-right: 20px; }
-#who_is p img { float:left; }
 tt { font-style: monospace; color: #78bae6; }
 dl { text-align: left; }
 dl dt { text-align: left; }
@@ -48,6 +47,7 @@ dl dd { text-align: left; }
 </style>
 
 <!--
+div .slides { top: 30% !important; }
 p { text-align: left; }
 -->
 </head>
@@ -64,14 +64,14 @@ p { text-align: left; }
     </section>
 
     <section>
-      <h3>Twisted via Python</h3>
+      <h2>Twisted via Python</h2>
       <p>by Mike Warren</p>
       <p><a href="http://www.mike-warren.com">mike-warren.com</a></p>
       <p><a href="https://twitter.com/meejah">@meejah</a></p>
     </section>
 
     <section>
-      <h3>boost::asio via C++</h3>
+      <h2>boost::asio via C++</h2>
       <p>by Kurt Neufeld</p>
       <p><a href="http://www.burgundywall.com">burgundywall.com</a></p>
       <p><a href="https://twitter.com/kneufeld">@kneufeld</a></p>
@@ -97,7 +97,7 @@ p { text-align: left; }
       <img src="images/libbitcoin.png" height=150>
       <img src="images/txtorcon.svg" height=150>
       </p>
-      <p class="fragment" style="clear:both">every UI ever</p>
+      <h3 class="fragment" style="clear:both">every UI framework ever</h3>
     </section>
 
     <section>
@@ -156,21 +156,58 @@ p { text-align: left; }
     </section>
 
     <section>
-      <h2>tcp connection sequence</h2>
+      <h2>asio connection sequence</h2>
+      <p>simplified</p>
       <img src="images/tcp_start.png"/>
     </section>
 
     <section>
-      <h2>tcp connection sequence</h2>
-      <img src="images/tcp_start.png"/>
+      <h2>chat server sequence</h2>
+      <img src="images/msg_forward.png"/>
+    </section>
+
+    <section>
+      <h2>Performance</h2>
+      <table>
+        <thead>
+          <tr><th>Var</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+        <tr class="fragment" data-fragment-index=1>
+          <td># clients</td>
+          <td>15</td>
+        </tr>
+        <tr class="fragment" data-fragment-index=1>
+          <td>send delay</td>
+          <td>1ms</td>
+        </tr>
+        <tr class="fragment" data-fragment-index=1>
+          <td>msg size</td>
+          <td>21 bytes</td>
+        </tr>
+        <tr class="fragment" data-fragment-index=2>
+          <td>total msg recv</td>
+          <td>638,316</td>
+        </tr>
+        <tr class="fragment" data-fragment-index=2>
+          <td>total msg sent</td>
+          <td>8,935,859</td>
+        </tr>
+        <tr class="fragment" data-fragment-index=3>
+          <td>msg/sec</td>
+          <td>161,983</td>
+        </tr>
+        </tbody>
+      </table>
+      <p class="fragment" data-fragment-index=4>which isn't too crappy with zero optimization (running in debug mode)</p>
     </section>
 
     <section style="text-align: left;">
       <h1>THE END</h1>
-      <h3 class="fragment">Thanks in part to..</h3>
-      <ul class="fragment">
-        <li>http://lab.hakim.se/reveal-js/</li>
-        <li></li>
+      <div class="fragment">
+      <h3>Thanks in part to..</h3>
+      <ul>
+        <li><a href="http://lab.hakim.se/reveal-js/">http://lab.hakim.se/reveal-js/</a></li>
       </ul>
     </section>
 
@@ -178,32 +215,6 @@ p { text-align: left; }
       <h1>You Guys!</h1>
       <h3 class="fragment">(and polyglot)</h3>
     </section>
-
-    <!--
-  <section>
-    <section id="fragmentsx">
-      <h2>Fragments</h2>
-      <p>Hit the next arrow...</p>
-      <p class="fragment">... to step through ...</p>
-      <p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
-
-      <aside class="notes">
-        This slide has fragments which are also stepped through in the notes window.
-      </aside>
-    </section>
-    <section>
-      <h2>Fragment Styles</h2>
-      <p>There's different types of fragments, like:</p>
-      <p class="fragment grow">grow</p>
-      <p class="fragment shrink">shrink</p>
-      <p class="fragment roll-in">roll-in</p>
-      <p class="fragment fade-out">fade-out</p>
-      <p class="fragment current-visible">current-visible</p>
-      <p class="fragment highlight-red">highlight-red</p>
-      <p class="fragment highlight-blue">highlight-blue</p>
-    </section>
-  </section>
-  -->
 
   </div><!-- slides -->
 
@@ -220,9 +231,12 @@ Reveal.initialize({
 controls: true,
 progress: true,
 history: true,
-center: false,
+center: true,
 mouseWheel: false,
 slideNumber: true,
+
+width: 989,
+height: 1245,
 
 transition: 'slide', // none/fade/slide/convex/concave/zoom
 
