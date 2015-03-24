@@ -101,7 +101,8 @@ void hammer_client::send_msg()
     }
 
     pointer_deadline_timer timer = std::make_shared<boost::asio::deadline_timer>( m_socket.get_io_service() );
-    timer->expires_from_now( boost::posix_time::milliseconds( 0 ) );
+    timer->expires_from_now( boost::posix_time::milliseconds( 1 ) );
+
     timer->async_wait(
         [this, timer]( boost::system::error_code )
     {
