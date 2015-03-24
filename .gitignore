@@ -3,3 +3,11 @@ server/server
 client/client
 presentation/*.png
 hammer/hammer
+.DS_Store
+.svn
+log/*.log
+tmp/**
+presentation/node_modules/
+presentation/.sass-cache
+presentation/css/reveal.min.css
+presentation/js/reveal.min.js
