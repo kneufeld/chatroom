@@ -37,16 +37,16 @@ private:
     void do_read();
     void do_write();
 
-    tcp::socket socket_;
-    chat_room& room_;
+    tcp::socket m_socket;
+    chat_room& m_room;
 
     typedef std::array<char, 1024> buffer_t;
-    buffer_t m_read_buff;
-    buffer_t m_write_buff;
+    buffer_t            m_read_buff;
+    buffer_t            m_write_buff;
 
-    msgpack::unpacker m_unpacker;
-    msgpack::sbuffer  m_packer;
-    chat_message m_msg;
+    msgpack::unpacker   m_unpacker;
+    msgpack::sbuffer    m_packer;
+    chat_message        m_msg;
 };
 
 class chat_room
@@ -81,6 +81,6 @@ private:
     void do_accept();
 
     tcp::acceptor acceptor_;
-    tcp::socket socket_;
-    chat_room room_;
+    tcp::socket m_socket;
+    chat_room m_room;
 };
