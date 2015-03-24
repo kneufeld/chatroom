@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 
-<title>Logging</title>
+<title>Event Based Programming</title>
 
 <meta name="description" content="explore logging with an emphasis on python">
-<meta name="author" content="Kurt Neufeld">
+<meta name="author" content="Kurt Neufeld & Mike Warren">
 
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -30,263 +30,182 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );
 </script>
 
 <!--[if lt IE 9]>
-            <script src="lib/js/html5shiv.js"></script>
-            <![endif]-->
+      <script src="lib/js/html5shiv.js"></script>
+      <![endif]-->
 
 
 <style type="text/css">
 dt { text-align: left; }
 .reveal li small { vertical-align: middle; }
 .reveal img { vertical-align: middle; }
+img { background-color: white !important; }
+#who_is img { margin-right: 20px; }
+#who_is p img { float:left; }
+tt { font-style: monospace; color: #78bae6; }
+dl { text-align: left; }
+dl dt { text-align: left; }
+dl dd { text-align: left; }
 </style>
 
+<!--
+p { text-align: left; }
+-->
 </head>
 
 <body>
 
 <div class="reveal">
 
-    <!-- Any section element inside of this container is displayed as a slide -->
-    <div class="slides">
+  <!-- Any section element inside of this container is displayed as a slide -->
+  <div class="slides">
 
     <section>
-        <h1>Logging</h1>
-        <h3>A journey through time</h3>
-        <small>by <a href="http://www.burgundywall.com">Kurt Neufeld</a></a></small>
+      <h1>Event Based Programming</h1>
     </section>
 
     <section>
-        <h2>What is logging?</h2>
+      <h3>Twisted via Python</h3>
+      <p>by Mike Warren</p>
+      <p><a href="http://www.mike-warren.com">mike-warren.com</a></p>
+      <p><a href="https://twitter.com/meejah">@meejah</a></p>
     </section>
 
     <section>
-        <img src="images/logging-bw.jpg" alt="" />
-        <p class="fragment">no</p>
+      <h3>boost::asio via C++</h3>
+      <p>by Kurt Neufeld</p>
+      <p><a href="http://www.burgundywall.com">burgundywall.com</a></p>
+      <p><a href="https://twitter.com/kneufeld">@kneufeld</a></p>
     </section>
 
     <section>
-        <img src="images/stacked-logs.jpg" alt="" />
-        <p class="fragment">closer</p>
+      <h3>Who is event based programming?</h3>
+      <h3>What is event based programming?</h3>
+      <h3>Why event based programming?</h3>
     </section>
 
-    <section data-background="images/logs.png">
-        <h2 class="fragment">ooohh...</h2>
+    <section id="who_is">
+      <h2>Who is event based programming?</h2>
+      <span class="fragment">brogrammer <img src="images/kurt.jpg" width=150 /></span>
+      <span class="fragment">brogrammer <img src="images/mike.jpg" width=150 /></span>
+      <p class="fragment">
+      <img src="images/nginx.png">
+      <img src="images/libtorrent.png" height=100>
+      <img src="images/jquery.jpg" height=100>
+      <img src="images/tahoe.png" height=100>
+      <img src="images/freevo.png" height=100>
+      <img src="images/twitter.jpg" height=100>
+      <img src="images/libbitcoin.png" height=150>
+      <img src="images/txtorcon.svg" height=150>
+      </p>
+      <p class="fragment" style="clear:both">every UI ever</p>
     </section>
 
     <section>
-        <h2>What is logging?</h2>
+      <h2>What is event based programming?</h2>
+      <p class="fragment">First some history...</p>
+      <p class="fragment">Traditionally, scalability has been achieved by using
+      multiple threads or multiple processes. Apache for instance, can be configured
+      to use either.</p>
+      <p class="fragment">Since threads can run concurrently in a
+      single process, a well written threaded program can be extremely
+      fast.</p>
+      <p class="fragment">Unfortunately Amdahl's law states (basically) that there
+      is always some part of a system that can't be parallelized and
+      therefore infinite cores does not yield infinite speedup.</p>
+      <p class="fragment">But mostly threads suck because threaded programming
+      is <em>hard</em>.</p>
+    </section>
+
+    <section data-state="moon">
+      <h2>What is event based programming?</h2>
+      <div style="text-align: left">
         <dl class="fragment">
-            <dt>logging</dt>
-            <dd>(verb) a series of messages emitted from an application</dd>
+          <dt>event</dt>
+          <dd>(noun)</dd><!-- FIXME -->
         </dl>
-        <dl class="fragment">
-            <dt>message</dt>
-            <dd>(noun) a distinct piece of information emitted from an application (with a timestamp)</dd>
-            <dd class="fragment">almost always a single line of text</dd>
-        </dl>
-        <dl class="fragment">
-            <dt>quick example</dt>
-        <pre>DEBUG 2015-03-14 06:00:01,700 pgrabber.imgparser:52: get_url_contents: http://dilbert.com/</pre>
-        </dl>
+      </div>
+      <p class="fragment">Event based programs are based on a loop that sits
+      around and waits for... events. An event can be a timer, network packet,
+      mouse click, basically anything that the operating system can notify you
+      about asynchronously.</p>
+      <p class="fragment">A function that registers itself to be notified on a given
+      event is named a <tt>callback</tt> and that callback handles the event.</p>
+      <!-- image goes here -->
+    </section>
+
+    <!-- set data-state to moon before/after setting solarized -->
+    <section data-state="solarized">
+      <h2>twisted</h2>
+      <p>your slides can be in a different color</p>
+    </section>
+
+    <section data-state="moon">
+      <h2>boost::asio</h2>
+      <div style="text-align: left">
+      <dl class="fragment">
+        <dt>boost</dt>
+        <dd>the greatest open source c++ library ever</dd>
+        <dd><em>lots</em> of pieces, <tt>asio</tt> is just one of them</dd>
+      </dl>
+      <dl class="fragment">
+        <dt>asio</dt>
+        <dd>asynchronous input/output</dd>
+        <dd>a cross-platform C++ library for network and low-level I/O programming</dd>
+      </dl>
+    </div>
     </section>
 
     <section>
-        <h2>Why log?</h2>
-
-        <p>There are several reasons why you want to enable logging.</p>
-        <ol>
-            <li class="fragment">have a record of errors</li>
-            <li class="fragment">application monitoring</li>
-            <ol>
-                <li class="fragment">metrics <small class="fragment">that took 3ms</small></li>
-                <li class="fragment">analytics <small class="fragment">somebody registered!</small></li>
-                <li class="fragment">alerts <small class="fragment">getting low on disc space</small></li>
-            </ol>
-            <li class="fragment">the law <small class="fragment">:(</small></li>
-            <li class="fragment">security audits <small class="fragment">:)</small></li>
-            <li class="fragment">have a history of low level information for future aid in debugging
-            <ul>
-                <li class="fragment">this is the through time part</li>
-                <li class="fragment">this is a gift to your future self</li>
-            </ul>
-            </li>
-        </ol>
+      <h2>tcp connection sequence</h2>
+      <img src="images/tcp_start.png"/>
     </section>
 
     <section>
-        <h2>Dissect Log Message</h2>
-        <small>
-            <span class="fragment highlight-red" data-fragment-index=1>DEBUG</span>
-            <span class="fragment highlight-blue" data-fragment-index=2>2015-03-14 06:00:01,700</span>
-            <span class="fragment highlight-green" data-fragment-index=3>pgrabber.imgparser:52:</span>
-            <span>get_url_contents: http://dilbert.com/</span>
-        </small>
-        <table>
-            <thead>
-                <tr><th>Piece</th><th>Value</th></tr>
-            </thead>
-            <tbody>
-            <tr class="fragment" data-fragment-index=1><td><span style="color:#ff2c2d">level</span></td><td>DEBUG</td></tr>
-            <tr class="fragment" data-fragment-index=2><td><span style="color:#1b91ff">time stamp</span></td><td>2015-03-14 06:00:01,700</td></tr>
-            <tr class="fragment" data-fragment-index=3><td><span style="color:#17ff2e">location</td><td>pgrabber.imgparser:52</td></tr>
-                <tr class="fragment" data-fragment-index=4><td><span>message</span></td><td>get_url_contents: http://dilbert.com/</td></tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section>
-            <h2>Who are logs for?</h2>
-            <p class="fragment">As previously mentioned, logs are for your future self. This implies that
-            logs are for humans. And they certainly can be, but more often than not...</p>
-            <p class="fragment">
-            Logs are for computers. Humans don't run analytics and create graphs by hand,
-            computers do that.
-            </p>
-        </section>
-
-        <section>
-            <h2>Software for logs</h2>
-            <p>
-            <span class="fragment"><a href="http://logstash.net"><img src="images/logstash-logo.png" height=100 /> logstash</a></span>
-            <span class="fragment">+</span>
-            <span class="fragment"><a href="https://www.elastic.co/products/kibana"><img src="images/kibana-logo.png"/></a>
-            <span class="fragment">=</span>
-            </p>
-            <p class="fragment"><a href="images/kibana-1.png"><img src="images/kibana-1.png" width=75% /></a></p>
-        </section>
-
-        <section>
-            <h2>Logstash</h2>
-            <p>I've only just started playing with logstash so I'm nowhere
-            close to an expert. Check it out online and watch some youtube videos.</p>
-            <p class="fragment">Having said that, here's my expert opinion.</p>
-            <p class="fragment"><strong>It's freaking awesome!</strong></p>
-            <p class="fragment">Logstash parses the logs and then
-            feeds these records to <a href="https://www.elastic.co/products/elasticsearch">elasticsearch</a> which can then be searched and graphed using kibana. Kibana
-            is a search and graphing frontend to elasticsearch.</p>
-        </section>
-
-        <section>
-            <h2>Creating the logs...</h2>
-            <p>You typically create a log message with some code that looks something
-            like this...</p>
-            <pre class="fragment"><code data-trim class="language-python">
-            logger.info( "%s: rendering web page took %d ms", self, render_time() )
-            </code></pre>
-            <!--
-            <p class="fragment">Creating that log message is potentially expensive</p>
-            -->
-        </section>
-
-        <section>
-            <h2>Parsing the logs...</h2>
-            <p class="fragment">And then the first thing a log parser
-            has to do is the opposite and get meaning out of the message.</p>
-            <pre class="fragment"><code data-trim class="language-python">
-            obj, render_time = re.search( "(\w+): rendering web page took (\d+) ms", msg ).groups()
-render_time = int(render_time)
-            </code></pre>
-            <p class="fragment">And you'd have to write a custom
-            parser for <strong>each</strong> log message you want to parse</p>
-        </section>
-
-        <section>
-            <h2>Structured Logging</h2>
-            <p class="fragment">Which brings us to a growing <em>movement</em>
-            called structured logging</p>
-            <p class="fragment">If you know your log messages are going to be consumed
-            by a computer (vs a human) then why not make it easier on the computer (and
-            the human writing the code) by making the log message easily parseable.</p>
-            <p class="fragment">Write your log messages in JSON!</p>
-            <p class="fragment">(or xml if you hate yourself)</p>
-        </section>
-
-        <section>
-            <h2>Structured Log</h2>
-            <pre class="fragment"><code data-trim class="language-python">
-            logger.info( "%s: rendering web page took %d ms", self, render_time() )
-INFO 10:10:10.10 cheetah: rendering web page took 34 ms
-            </code></pre>
-            <p class="fragment">is now</p>
-            <pre class="fragment"><code data-trim class="language-python">
-            logger.info( "render_time", what=self, took=render_time() )
-INFO, 10:10:10.10, "render_time", { what="cheetah", took=34 }
-            </code></pre>
-            <p class="fragment">which is obviously easy to parse for both a computer and not too bad for a person</p>
-            <p class="fragment">(I always hated it when professors said <em>obviously</em>)</p>
-        </section>
-
-        <section>
-            <h2>Parsing A Structured Log</h2>
-            <pre class="fragment"><code data-trim class="language-python">
-            level, time, event, fields = json.loads(msg)
-            </code></pre>
-            <p><span class="fragment">that's it</span> <span class="fragment">, you're done</span></p>
-            <p class="fragment">that works for every single structured log message</p>
-            <p class="fragment">what you do with it is left as an exercise to the reader</p>
-        </section>
-
-        <section>
-            <h2>Performance</h2>
-            <p class="fragment">any logging framework worth its salt early exits if the log level is too low</p>
-            <pre class="fragment"><code data-trim class="language-python">
-            for i in xrange(1000000): pass
-time: 0m0.019s # baseline for loop
-            </code></pre>
-            <pre class="fragment"><code data-trim class="language-python">
-            for i in xrange(1000000): logger.debug("%d",i) # log level too low
-time: 0m0.061s # 0.04 slower
-            </code></pre>
-            <pre class="fragment"><code data-trim class="language-python">
-            for i in xrange(1000000): logger.debug("%d",i) # no longer too low
-time: 0m37.931s # piped to /dev/null
-            </code></pre>
-            <p class="fragment">so I don't want to <strong>EVER</strong> hear that you don't log
-            because it's <em>too slow</em></p>
-            <p class="fragment"><strong>EVER!<span class="fragment">!1!</span></strong></p>
-        </section>
-
-        <section style="text-align: left;">
-            <h1>THE END</h1>
-            <h3 class="fragment">Thanks in part to..</h3>
-            <ul class="fragment">
-                <li>http://lab.hakim.se/reveal-js/</li>
-                <li>http://gregoryszorc.com/blog/category/logging/</li>
-            </ul>
-        </section>
-
-        <section>
-            <h1>You Guys!</h1>
-            <h3 class="fragment">(and polyglot)</h3>
-        </section>
-
-        <!--
-    <section>
-        <section id="fragmentsx">
-            <h2>Fragments</h2>
-            <p>Hit the next arrow...</p>
-            <p class="fragment">... to step through ...</p>
-            <p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
-
-            <aside class="notes">
-                This slide has fragments which are also stepped through in the notes window.
-            </aside>
-        </section>
-        <section>
-            <h2>Fragment Styles</h2>
-            <p>There's different types of fragments, like:</p>
-            <p class="fragment grow">grow</p>
-            <p class="fragment shrink">shrink</p>
-            <p class="fragment roll-in">roll-in</p>
-            <p class="fragment fade-out">fade-out</p>
-            <p class="fragment current-visible">current-visible</p>
-            <p class="fragment highlight-red">highlight-red</p>
-            <p class="fragment highlight-blue">highlight-blue</p>
-        </section>
+      <h2>tcp connection sequence</h2>
+      <img src="images/tcp_start.png"/>
     </section>
-    -->
 
-    </div><!-- slides -->
+    <section style="text-align: left;">
+      <h1>THE END</h1>
+      <h3 class="fragment">Thanks in part to..</h3>
+      <ul class="fragment">
+        <li>http://lab.hakim.se/reveal-js/</li>
+        <li></li>
+      </ul>
+    </section>
+
+    <section>
+      <h1>You Guys!</h1>
+      <h3 class="fragment">(and polyglot)</h3>
+    </section>
+
+    <!--
+  <section>
+    <section id="fragmentsx">
+      <h2>Fragments</h2>
+      <p>Hit the next arrow...</p>
+      <p class="fragment">... to step through ...</p>
+      <p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
+
+      <aside class="notes">
+        This slide has fragments which are also stepped through in the notes window.
+      </aside>
+    </section>
+    <section>
+      <h2>Fragment Styles</h2>
+      <p>There's different types of fragments, like:</p>
+      <p class="fragment grow">grow</p>
+      <p class="fragment shrink">shrink</p>
+      <p class="fragment roll-in">roll-in</p>
+      <p class="fragment fade-out">fade-out</p>
+      <p class="fragment current-visible">current-visible</p>
+      <p class="fragment highlight-red">highlight-red</p>
+      <p class="fragment highlight-blue">highlight-blue</p>
+    </section>
+  </section>
+  -->
+
+  </div><!-- slides -->
 
 </div!-- reveal -->
 
@@ -301,7 +220,9 @@ Reveal.initialize({
 controls: true,
 progress: true,
 history: true,
-center: true,
+center: false,
+mouseWheel: false,
+slideNumber: true,
 
 transition: 'slide', // none/fade/slide/convex/concave/zoom
 
@@ -316,6 +237,12 @@ dependencies: [
 ]
 });
 
+Reveal.addEventListener('moon', function() {
+  document.getElementById('theme').setAttribute('href','css/theme/moon.css');
+    });
+Reveal.addEventListener('solarized', function() {
+  document.getElementById('theme').setAttribute('href','css/theme/solarized.css');
+    });
 </script>
 
 </body>
