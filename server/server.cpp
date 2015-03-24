@@ -27,6 +27,8 @@
 using boost::lexical_cast;
 using boost::asio::ip::tcp;
 
+uint64_t msg_recv=0;
+uint64_t msg_sent=0;
 
 chat_room::chat_room( std::string name )
 {
@@ -63,6 +65,11 @@ chat_session::chat_session( tcp::socket socket, chat_room& room )
       m_room( room )
 {
     TL_S_DEBUG << "creating " << *this;
+}
+
+chat_session::~chat_session()
+{
+    TL_S_INFO << "grand totals: recv: " << msg_recv << ", sent: " << msg_sent;
 }
 
 void chat_session::start()
@@ -102,6 +109,8 @@ void chat_session::do_read()
             close();
             return;
         }
+
+        msg_recv++;
 
         try
         {
@@ -170,6 +179,7 @@ void chat_session::do_write()
             return;
         }
 
+        msg_sent++;
         TL_S_TRACE << *self << ": wrote " << length << " bytes";
     } );
 }

@@ -26,6 +26,7 @@ public:
     typedef std::shared_ptr<chat_session> pointer;
 
     chat_session( tcp::socket socket, chat_room& room );
+    ~chat_session();
 
     void start();
     void deliver( const chat_message& msg );
