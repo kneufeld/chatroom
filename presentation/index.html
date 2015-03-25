@@ -37,12 +37,10 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );
 
 
 <style type="text/css">
-dt { text-align: left; }
 .reveal li small { vertical-align: middle; }
 .reveal img { vertical-align: middle; }
 img { background-color: white !important; }
 #who_is img { margin-right: 20px; }
-tt { font-style: monospace; color: #78bae6; }
 dl { text-align: left; }
 dl dt { text-align: left; }
 dl dd { text-align: left; }
@@ -54,64 +52,43 @@ p { text-align: left; }
 -->
 
 <style type="text/css">
+
 section
 {
-text-align: left;
-min-height: 80% !important;
-height: 80% !important;
+  text-align: left;
 }
 
 .small
 {
-font-size: 75% !important;
+  font-size: 75% !important;
+}
+
+tt, code, pre {
+  font-style: 'Source Code Pro', monospace;
+}
+
+tt {
+  color: #78bae6;
 }
 
 code
 {
-font-size: 85% !important;
-font-face: 'Source Code Pro', monospace;
+  font-size: 120% !important;
 }
 
-pre>code
+pre > code
 {
-background: #002b36 !important;
+  background: #002b36 !important;
 }
-
-.hugecode
-{
-height: 100%;
-width: 100%;
-}
-.hugecode code {
-height: 100% !important;
-border: 1px solid red;
-}
-.hugecode pre
-{
-width: 100%;
-height: 100%;
-font-face: 'Source Code Pro', monospace;
-font-size: 80% !important;
-}
-
 
 .aside
 {
-font-size: 75% !important;
-opacity: 0.5;
+  font-size: 75% !important;
+  opacity: 0.5;
 }
 
-.big
-{
-font-size: 145% !important;
-text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
-}
-
-ul
-{
-font-size: 160% !important;
-}
 </style>
+
 </head>
 
 <body>
@@ -122,8 +99,9 @@ font-size: 160% !important;
   <div class="slides">
 
     <section>
-      <h2>Event-Based Programming</h2>
-      <p><span class="big">Twisted</span> and <span class="big"><code>boost::asio</code></span></p>
+      <h1>Event-Based Programming</h1>
+      <hr/>
+      <h2>Twisted and boost::asio</h2>
     </section>
 
     <section style="min-height: 30% !important; background-image: url(images/mike-transparent.svg); background-size: 40%; background-repeat: no-repeat; background-position: top right;">
@@ -145,7 +123,7 @@ font-size: 160% !important;
     </section>
 
     <section>
-      <h1>Talk Outline</h1>
+      <h2>Talk Outline</h2>
       <ul>
         <li class="fragment">Event-Based Programming Overview</li>
         <li class="fragment">example: chat server</li>
@@ -178,12 +156,12 @@ font-size: 160% !important;
 
     <section>
       <h2>Event-based I/O</h2>
-      <img src="images/event-based-io.svg" style="border: 1em solid white; height: 80%; width: auto;">
+      <img src="images/event-based-io.svg" style="padding: 0.5em; height: 500px;">
     </section>
 
     <section>
       <h2>Event-based I/O</h2>
-      <img src="images/event-based-io-arrows.svg" style="border: 1em solid white; height: 80%; width: auto;">
+      <img src="images/event-based-io-arrows.svg" style="padding: 0.5em; height: 500px;">
     </section>
 
     <section>
@@ -197,7 +175,7 @@ font-size: 160% !important;
       </ul>
     </section>
 
-    <section>
+    <section data-state="moon">
       <h2>Event-Based Programming</h2>
       <ul>
         <li class="fragment">&ldquo;event&rdquo; &rarr; run code</li>
@@ -247,7 +225,7 @@ font-size: 160% !important;
     <!-- set data-state to moon before/after setting solarized -->
     <section data-state="solarized">
       <h2>twisted</h2>
-      <code>git clone https://meejah.ca/polyglot-txchat</code>
+      <pre style="font-size: 100%;">git clone https://meejah.ca/polyglot-txchat</pre>
       <ul>
         <li class="fragment">https://twistedmatrix.com</li>
         <li class="fragment">Since 2001</li>
@@ -257,7 +235,7 @@ font-size: 160% !important;
       </ul>
     </section>
 
-    <section data-state="solarized">
+    <section>
       <h2>twisted</h2>
       <ul>
         <li class="fragment">Endpoints: <code>TCP4ServerEndpoint TCP4ClientEndpoint</code></li>
@@ -267,8 +245,8 @@ font-size: 160% !important;
       </ul>
     </section>
 
-    <section class="hugecode">
-        <section data-state="solarized"> <!-- dep. injection -->
+    <section> <!-- dep. injection -->
+        <section> <!-- dep. injection -->
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self, factory, decoder=msgpack.Unpacker()):
@@ -285,7 +263,8 @@ font-size: 160% !important;
             pass
               </code></pre>
         </section>
-        <section data-state="solarized">
+
+        <section>
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self, factory, decoder=msgpack.Unpacker()):
@@ -304,60 +283,52 @@ font-size: 160% !important;
             pass
               </code></pre>
         </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-        <section data-state="solarized">
-          <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
-    </section>
 
-
-    <section data-state="solarized">
-      <h2>twisted</h2>
-      <ul>
-        <li class="fragment"></li>
-        <li class="fragment"></li>
-      </ul>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section>
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
     </section>
 
     <section data-state="solarized">
@@ -367,9 +338,6 @@ font-size: 160% !important;
         <li class="fragment"></li>
       </ul>
     </section>
-
-
-
 
     <section data-state="moon">
       <h2>boost::asio</h2>
@@ -431,7 +399,8 @@ font-size: 160% !important;
         </tr>
         </tbody>
       </table>
-      <p class="fragment" data-fragment-index=4>which isn't too crappy with zero optimization (running in debug mode)</p>
+      <p class="fragment" data-fragment-index=4>zero optimizations</p>
+      <p class="fragment" data-fragment-index=5>running in debug mode</p>
     </section>
 
     <section style="text-align: left;">
@@ -463,7 +432,7 @@ Reveal.initialize({
 controls: true,
 progress: true,
 history: true,
-center: true,
+center: false,
 mouseWheel: false,
 slideNumber: true,
 
