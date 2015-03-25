@@ -39,19 +39,15 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );
 <style type="text/css">
 .reveal li small { vertical-align: middle; }
 .reveal img { vertical-align: middle; }
-img { background-color: white !important; }
 #who_is img { margin-right: 20px; }
 dl { text-align: left; }
 dl dt { text-align: left; }
 dl dd { text-align: left; }
-</style>
 
-<!--
-div .slides { top: 30% !important; }
-p { text-align: left; }
--->
-
-<style type="text/css">
+img { 
+  background-color: white !important;
+  text-shadow: none;
+}
 
 section
 {
@@ -64,7 +60,7 @@ section
 }
 
 tt, code, pre {
-  font-style: 'Source Code Pro', monospace;
+  font-family: 'Source Code Pro', monospace;
 }
 
 tt {
@@ -114,10 +110,9 @@ pre > code
       </div>
     </section>
 
-    <section>
-      <span style="float: right;"><img src="images/kurt.jpg" width=150 /></span>
+    <section style="min-height: 30% !important; background-image: url(images/kurt.png); background-size: 40%; background-repeat: no-repeat; background-position: top right;">
       <h2>boost::asio <span class="small">via C++</span></h2>
-      <p>by Kurt Neufeld</p>
+      <p>Kurt Neufeld</p>
       <p><a href="http://www.burgundywall.com">burgundywall.com</a></p>
       <p><a href="https://twitter.com/kneufeld">@kneufeld</a></p>
     </section>
@@ -146,12 +141,12 @@ pre > code
 
     <section>
       <h2>Threaded I/O</h2>
-      <img src="images/threaded-io.svg" style="border: 1em solid white; height: 80%; width: auto;">
+      <img src="images/threaded-io.svg" style="padding: 0.5em; border: none;">
     </section>
 
     <section>
       <h2>Threaded I/O</h2>
-      <img src="images/threaded-io-contextswitches.svg" style="border: 1em solid white; height: 80%; width: auto;">
+      <img src="images/threaded-io-contextswitches.svg" style="padding: 0.5em; border: none;">
     </section>
 
     <section>
