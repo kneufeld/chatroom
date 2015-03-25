@@ -122,46 +122,94 @@ font-size: 160% !important;
   <div class="slides">
 
     <section>
-      <h1>Event Based Programming</h1>
+      <h2>Event-Based Programming</h2>
+      <p><span class="big">Twisted</span> and <span class="big"><code>boost::asio</code></span></p>
+    </section>
+
+    <section style="min-height: 30% !important; background-image: url(images/mike-transparent.svg); background-size: 40%; background-repeat: no-repeat; background-position: top right;">
+      <!-- <img src="images/mike-transparent.svg" style="background: rgba(0, 0, 0, 0.0); width: 40%; height: auto; border: none; margin-left: 1em; float:right;" /> -->
+      <!-- <object type="image/svg+xml" data="images/mike-transparent.svg" style="background: rgba(0, 0, 0, 0.0); width: 40%; height: auto; border: none; margin-left: 1em; float:right;"></object> -->
+      <div style="float:left; max-width: 45%;">
+      <h2>Twisted <span class="small">via Python</span></h2>
+      <p>Mike Warren</p>
+      <p><a href="https://@meejah.ca">https://<span style="font-size: 150%; text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); text-decoration: underline; -moz-text-decoration-color: rgba(255, 64, 64, 0.5);">@meejah</span>.ca</a></p>
+      </div>
     </section>
 
     <section>
-      <h2>Twisted via Python</h2>
-      <p>by Mike Warren</p>
-      <p><a href="http://www.mike-warren.com">mike-warren.com</a></p>
-      <p><a href="https://twitter.com/meejah">@meejah</a></p>
-    </section>
-
-    <section>
-      <h2>boost::asio via C++</h2>
+      <span style="float: right;"><img src="images/kurt.jpg" width=150 /></span>
+      <h2>boost::asio <span class="small">via C++</span></h2>
       <p>by Kurt Neufeld</p>
       <p><a href="http://www.burgundywall.com">burgundywall.com</a></p>
       <p><a href="https://twitter.com/kneufeld">@kneufeld</a></p>
     </section>
 
     <section>
-      <h3>Who is event based programming?</h3>
-      <h3>What is event based programming?</h3>
-      <h3>Why event based programming?</h3>
+      <h1>Talk Outline</h1>
+      <ul>
+        <li class="fragment">Event-Based Programming Overview</li>
+        <li class="fragment">example: chat server</li>
+        <li class="fragment">Programming with Twisted</li>
+        <li class="fragment">Programming with boost::asio</li>
+      </ul>
     </section>
 
-    <section id="who_is">
-      <h2>Who is event based programming?</h2>
-      <span class="fragment">brogrammer <img src="images/kurt.jpg" width=150 /></span>
-      <span class="fragment">brogrammer <img src="images/mike.jpg" width=150 /></span>
-      <p class="fragment">
-      <img src="images/nginx.png">
-      <img src="images/libtorrent.png" height=100>
-      <img src="images/jquery.jpg" height=100>
-      <img src="images/tahoe.png" height=100>
-      <img src="images/freevo.png" height=100>
-      <img src="images/twitter.jpg" height=100>
-      <img src="images/libbitcoin.png" height=150>
-      <img src="images/txtorcon.svg" height=150>
-      </p>
-      <h3 class="fragment" style="clear:both">every UI framework ever</h3>
+
+    <section>
+      <h2>Overview: background</h2>
+      <ul>
+        <li class="fragment">Two kinds of programs:</li>
+        <li class="fragment">CPU-bound <span class="aside">(no waiting)</span></li>
+        <li class="fragment">I/O-bound <span class="aside">(waiting)<span></li>
+        <li class="fragment">Threading: CPU</li>
+        <li class="fragment">event-based: I/O</li>
+      </ul>
     </section>
 
+    <section>
+      <h2>Threaded I/O</h2>
+      <img src="images/threaded-io.svg" style="border: 1em solid white; height: 80%; width: auto;">
+    </section>
+
+    <section>
+      <h2>Threaded I/O</h2>
+      <img src="images/threaded-io-contextswitches.svg" style="border: 1em solid white; height: 80%; width: auto;">
+    </section>
+
+    <section>
+      <h2>Event-based I/O</h2>
+      <img src="images/event-based-io.svg" style="border: 1em solid white; height: 80%; width: auto;">
+    </section>
+
+    <section>
+      <h2>Event-based I/O</h2>
+      <img src="images/event-based-io-arrows.svg" style="border: 1em solid white; height: 80%; width: auto;">
+    </section>
+
+    <section>
+      <h2>Event-based vs. Threading</h2>
+      <ul>
+        <li class="fragment">OS resources</li>
+        <li class="fragment">Context-switching <span class="aside">(latency, overhead)</span></li>
+        <li class="fragment">Complexity</li>
+        <li class="fragment">One core?! <span class="aside">(e.g. share socket)</span></li>
+        <li class="fragment">Repeatability/testing</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Event-Based Programming</h2>
+      <ul>
+        <li class="fragment">&ldquo;event&rdquo; &rarr; run code</li>
+        <li class="fragment">event: timer, data arrives<br/><span class="aside">(network, user, disk, etc.)</span></li>
+        <li class="fragment">code: &ldquo;callback&rdquo; <span class="aside">errback</span></li>
+        <li class="fragment">Pattern: Reactor or Proactor <span class="aside">(&ldquo;Gang of Four&rdquo;)</span></li>
+        <li class="fragment">Twisted: reactor</li>
+        <li class="fragment">ASIO: both</li>
+      </ul>
+    </section>
+
+<!--
     <section>
       <h2>What is event based programming?</h2>
       <p class="fragment">First some history...</p>
@@ -183,7 +231,7 @@ font-size: 160% !important;
       <div style="text-align: left">
         <dl class="fragment">
           <dt>event</dt>
-          <dd>(noun)</dd><!-- FIXME -->
+          <dd>(noun)</dd>
         </dl>
       </div>
       <p class="fragment">Event based programs are based on a loop that sits
@@ -192,14 +240,136 @@ font-size: 160% !important;
       about asynchronously.</p>
       <p class="fragment">A function that registers itself to be notified on a given
       event is named a <tt>callback</tt> and that callback handles the event.</p>
-      <!-- image goes here -->
     </section>
+-->
+
 
     <!-- set data-state to moon before/after setting solarized -->
     <section data-state="solarized">
       <h2>twisted</h2>
-      <p>your slides can be in a different color</p>
+      <code>git clone https://meejah.ca/polyglot-txchat</code>
+      <ul>
+        <li class="fragment">https://twistedmatrix.com</li>
+        <li class="fragment">Since 2001</li>
+        <li class="fragment">330k Line of Ccode <span class="aside">(168k is tests)</span></li>
+        <li class="fragment">TCP, UDP, ... SSH, HTTPS, XMPP</li>
+        <li class="fragment">Servers, clients, ...</li>
+      </ul>
     </section>
+
+    <section data-state="solarized">
+      <h2>twisted</h2>
+      <ul>
+        <li class="fragment">Endpoints: <code>TCP4ServerEndpoint TCP4ClientEndpoint</code></li>
+        <li class="fragment">Transports: <code>ITLSTransport ITCPTransport</code></li>
+        <li class="fragment">Protocols: <code>ClientFactory, ServerFactory</code></li>
+        <li class="fragment">Follow <code>IProtocol</code></li>
+      </ul>
+    </section>
+
+    <section class="hugecode">
+        <section data-state="solarized"> <!-- dep. injection -->
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self, factory, decoder=msgpack.Unpacker()):
+            self.factory = factory
+            self.decoder = decoder
+
+        def dataReceived(self, data):
+            pass
+        def makeConnection(self, transport):
+            pass
+        def connectionMade(self, reason):
+            pass
+        def connectionLost(self, reason):
+            pass
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self, factory, decoder=msgpack.Unpacker()):
+            self.factory = factory
+            self.decoder = decoder
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:  # XXX
+                self.got_message(msg)
+        def makeConnection(self, transport):
+            pass
+        def connectionMade(self, reason):
+            pass
+        def connectionLost(self, reason):
+            pass
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+        <section data-state="solarized">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+              </code></pre>
+        </section>
+    </section>
+
+
+    <section data-state="solarized">
+      <h2>twisted</h2>
+      <ul>
+        <li class="fragment"></li>
+        <li class="fragment"></li>
+      </ul>
+    </section>
+
+    <section data-state="solarized">
+      <h2>twisted</h2>
+      <ul>
+        <li class="fragment"></li>
+        <li class="fragment"></li>
+      </ul>
+    </section>
+
+
+
 
     <section data-state="moon">
       <h2>boost::asio</h2>
