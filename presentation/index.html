@@ -292,7 +292,7 @@ read(fd, callback);
     </section>
 
     <!-- set data-state to moon before/after setting solarized -->
-    <section data-state="solarized">
+    <section>
       <h2>twisted</h2>
 <!--      <pre style="font-size: 100%;">git clone https://meejah.ca/polyglot-txchat</pre> -->
       <ul>
@@ -312,6 +312,7 @@ read(fd, callback);
       </aside>
     </section>
 
+<!--
     <section>
       <h2>twisted</h2>
       <ul>
@@ -321,10 +322,15 @@ read(fd, callback);
         <li class="fragment">Follow <code>IProtocol</code></li>
       </ul>
     </section>
+-->
+    <section data-transition="none">
+      <h2>twisted</h2>
+      <img src="images/twisted-class-diagram.svg" style="padding: 0.5em; width: 1000px; border: none;">
+    </section>
 
     <section> <!-- dep. injection -->
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre class="fragment"><code>class ChatServer(Protocol):</code></pre>
               <pre class="fragment"><code>    def connectionMade(self):
             pass</code></pre>
@@ -334,7 +340,7 @@ read(fd, callback);
             pass</code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
@@ -350,7 +356,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
@@ -366,7 +372,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
@@ -383,7 +389,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
@@ -401,7 +407,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         # ...
         def dataReceived(self, data):
@@ -409,7 +415,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         # ...
         def dataReceived(self, data):
@@ -417,7 +423,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         # ...
         def dataReceived(self, data):
@@ -426,7 +432,7 @@ read(fd, callback);
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         # ...
         def dataReceived(self, data):
@@ -438,7 +444,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         # ...
         def dataReceived(self, data):
@@ -448,7 +454,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             pass
@@ -460,7 +466,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             packed = msgpack.packb(msg)
@@ -472,7 +478,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             packed = msgpack.packb(msg)
@@ -485,7 +491,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             packed = msgpack.packb(msg)
@@ -499,7 +505,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             packed = msgpack.packb(msg)
@@ -514,7 +520,7 @@ read(fd, callback);
           </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>class ChatServer(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
@@ -535,7 +541,7 @@ read(fd, callback);
 
     <section> <!-- Factory -->
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -543,7 +549,7 @@ class ChatFactory(Factory):
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -551,7 +557,7 @@ class ChatFactory(Factory):
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -561,7 +567,7 @@ def main(reactor):
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -572,7 +578,7 @@ def main(reactor):
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -584,7 +590,7 @@ def main(reactor):
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -597,7 +603,7 @@ def main(reactor):
               </code></pre>
         </section>
         <section data-transition="none">
-          <h2>twisted</h2>
+          <h2>server protocol</h2>
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
@@ -613,12 +619,258 @@ react(main)  # from twisted.internet.task
         </section>
     </section>
 
-    <section data-state="solarized">
-      <h2>twisted</h2>
-      <ul>
-        <li class="fragment"></li>
-        <li class="fragment"></li>
-      </ul>
+
+    <section> <!-- client protocol -->
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+        self.unpacker.feed(data)
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+        self.unpacker.feed(data)
+        for msg in self.unpacker:
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+        self.unpacker.feed(data)
+        for msg in self.unpacker:
+            print("{}: {}".format(*tuple(msg)))
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+        self.unpacker.feed(data)
+        for msg in self.unpacker:
+            print("{}: {}".format(*tuple(msg)))
+
+    def sendMessage(self, nick, data):
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+        self.unpacker.feed(data)
+        for msg in self.unpacker:
+            print("{}: {}".format(*tuple(msg)))
+
+    def sendMessage(self, nick, data):
+        data = msgpack.packb([nick, msg])
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>client protocol</h2>
+              <pre><code>class ChatClient(Protocol):
+    def __init__(self, done):
+        self.done = done
+        self.unpacker = msgpack.Unpacker()
+
+    def connectionLost(self, reason):
+        self.done.callback(reason)
+
+    def dataReceived(self, data):
+        self.unpacker.feed(data)
+        for msg in self.unpacker:
+            print("{}: {}".format(*tuple(msg)))
+
+    def sendMessage(self, nick, data):
+        data = msgpack.packb([nick, msg])
+        self.transport.write(data)
+              </code></pre>
+        </section>
+    </section>
+
+    <section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+    def lineReceived(self, line):
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+    def lineReceived(self, line):
+        return self.protocol.sendMessage(self.nick, line)
+
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+    def lineReceived(self, line):
+        return self.protocol.sendMessage(self.nick, line)
+
+    def __init__(self, nick, proto):
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+    def lineReceived(self, line):
+        return self.protocol.sendMessage(self.nick, line)
+
+    def __init__(self, nick, proto):
+        self.nick = nick
+        self.protocol = proto
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+    def lineReceived(self, line):
+        return self.protocol.sendMessage(self.nick, line)
+
+    def __init__(self, nick, proto):
+        self.nick = nick
+        self.protocol = proto
+
+    def connectionLost(self, reason):
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code>from twisted.protocols.basic import LineReceiver
+class StandardInput(LineReceiver):
+    delimiter = os.linesep
+    def lineReceived(self, line):
+        return self.protocol.sendMessage(self.nick, line)
+
+    def __init__(self, nick, proto):
+        self.nick = nick
+        self.protocol = proto
+
+    def connectionLost(self, reason):
+        self.protocol.transport.loseConnection()
+        </code></pre>
+      </section>
     </section>
 
     <section data-state="moon">
