@@ -9,6 +9,8 @@
 <meta name="description" content="explore logging with an emphasis on python">
 <meta name="author" content="Kurt Neufeld &amp; Mike Warren">
 
+<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro' rel='stylesheet' type='text/css'>
+
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -65,7 +67,12 @@ section
 }
 
 tt, code, pre {
-  font-family: 'Source Code Pro', monospace;
+  font-family: monospace;
+  font-family: 'Source Code Pro' !important;
+}
+
+h1, h2 {
+//font-family: 'Source Sans Pro' !important;
 }
 
 tt {
@@ -282,10 +289,10 @@ read(fd, callback);
 -->
 
     <section>
-      <h2>example: chat server + client</h2>
+      <h2>example: chat server <span class="aside">&amp; client</span></h2>
       <ul>
         <li class="fragment">msgpack encoding <span class="aside">(and framing)</span></li>
-        <li class="fragment">list-of-strings: <code style="font: 80% monospace !important;">['nickname', 'insightful message']</code></li>
+        <li class="fragment">list-of-strings: <code class="python" style="font-size: 80% !important;">['nickname', 'insightful message']</code></li>
         <li class="fragment">TCP, 10001</li>
         <li class="fragment"><tt>thula.meejah.ca:10001</tt></li>
       </ul>
@@ -449,8 +456,8 @@ read(fd, callback);
         # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
-            for msg in self.decoder.next():
-                msg = self.decoder.next()
+            for msg in self.decoder:
+                # handle msg
           </code></pre>
         </section>
         <section data-transition="none">
@@ -461,7 +468,7 @@ read(fd, callback);
 
         def dataReceived(self, data):
             self.decoder.feed(data)
-            for msg in self.decoder.next():
+            for msg in self.decoder:
                 self.got_message(msg)
           </code></pre>
         </section>
@@ -599,19 +606,24 @@ class ChatFactory(Factory):
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
     endpoint.listen(ChatFactory())
+    return Deferred()  # loop forever
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">
+def main(reactor):
+    endpoint = TCP4ServerEndpoint(reactor, 10001)
+    endpoint.listen(Factory.forProtocol(ChatServer))
     return Deferred()
               </code></pre>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
               <pre><code class="lang-python">
-class ChatFactory(Factory):
-    def buildProtocol(self, addr):
-        return ChatServer()
-
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
-    endpoint.listen(ChatFactory())
+    endpoint.listen(Factory.forProtocol(ChatServer))
     return Deferred()
 
 react(main)  # from twisted.internet.task
@@ -1078,11 +1090,6 @@ test/test_server.py .....
         <li class="fragment"><code class="nohighlight">txchat client --nick meejah</code></li>
         <li class="fragment"><code class="nohighlight">thula.meejah.ca:10001</code></li>
       </ul>
-      </section>
-      <section data-transition="none">
-        <h2>Command-Line</h2>
-        <pre><code class="lang-python">
-        </code></pre>
       </section>
     </section>
 
