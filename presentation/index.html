@@ -127,7 +127,6 @@ pre > code
       </ul>
     </section>
 
-
     <section>
       <h2>Overview: background</h2>
       <ul>
@@ -139,6 +138,57 @@ pre > code
         <li class="fragment">Threading: CPU</li>
         <li class="fragment">Event based: I/O</li>
       </ul>
+    </section>
+
+    <section>
+      <h2>Definitions...</h2>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Synchronization_%28computer_science%29">syncronous</a></dt>
+          <dd>(concept) a blocking call, does not return until data or error
+          <pre><code>ec = read(fd, buffer);</code></pre>
+        </dd>
+        </dl>
+        <br/>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Asynchronous_I/O">asyncronous</a></dt>
+          <dd>(concept) a non-blocking call, returns instantly, callback happens <em>later</em>
+          <pre><code data-trim>read(fd, callback);
+// as a different function
+void callback(ec, buffer);</code></pre></dd>
+        </dl>
+    </section>
+
+    <section>
+      <h2>Definitions...</h2>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Event_%28computing%29">event</a></dt>
+          <dd>(verb) an occurence that requires some sort of handling,
+          usually with associate data</dd>
+        </dl>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Thread_%28computing%29">thread</a></dt>
+          <dd>(noun) the smallest sequence of instructions that can be
+          independently scheduled and run</dd>
+        </dl>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Context_switch">context switch</a></dt>
+          <dd>(verb) storing/restoring the state of a thread
+          before/after getting cpu time. expensive</dd>
+        </dl>
+    </section>
+
+    <section>
+      <h2>Definitions...</h2>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor</a></dt>
+          <dd>(pattern) waits for events and then calls handler to perform
+          actual read or write</dd>
+        </dl>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Proactor_pattern">proactor</a></dt>
+          <dd>(pattern) waits for events and performs the read or write,
+          passing any accociated data to the handler. asynchronous variant of reactor</dd>
+        </dl>
     </section>
 
     <section>
