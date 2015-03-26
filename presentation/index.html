@@ -7,7 +7,7 @@
 <title>Event Based Programming</title>
 
 <meta name="description" content="explore logging with an emphasis on python">
-<meta name="author" content="Kurt Neufeld & Mike Warren">
+<meta name="author" content="Kurt Neufeld &amp; Mike Warren">
 
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -133,7 +133,7 @@ pre > code
         <li class="fragment">Two kinds of programs:</li>
         <ul>
           <li class="fragment">CPU-bound <span class="aside">(no waiting)</span></li>
-          <li class="fragment">I/O-bound <span class="aside">(waiting)<span></li>
+          <li class="fragment">I/O-bound <span class="aside">(waiting)</span></li>
         </ul>
         <li class="fragment">Threading: CPU</li>
         <li class="fragment">Event based: I/O</li>
@@ -226,7 +226,7 @@ void callback(ec, buffer);</code></pre></dd>
       <h2>Event-Based Programming</h2>
       <ul>
         <li class="fragment">&ldquo;event&rdquo; &rarr; run code</li>
-        <li class="fragment">event: timer, data arrives<br/><span class="aside">(network, user, disk, etc.)</span></li>
+        <li class="fragment">event: timer, data received, data sent<br/><span class="aside">(network, user, disk, etc.)</span></li>
         <li class="fragment">code: &ldquo;callback&rdquo; <span class="aside">errback</span></li>
         <li class="fragment">Pattern: Reactor or Proactor <span class="aside">(&ldquo;Gang of Four&rdquo;)</span></li>
         <li class="fragment">Twisted: reactor</li>
@@ -371,48 +371,49 @@ void callback(ec, buffer);</code></pre></dd>
     <section>
       <h2>asio connection sequence</h2>
       <p>simplified</p>
-      <img src="images/tcp_start.png"/>
+      <img src="images/tcp_start.png" height=500/>
     </section>
 
     <section>
       <h2>chat server sequence</h2>
-      <img src="images/msg_forward.png"/>
+      <img src="images/msg_forward.png" height=500/>
     </section>
 
     <section>
       <h2>Performance</h2>
       <div style="float: left">
-      <table>
-        <thead>
-          <tr><th>Var</th><th>Value</th></tr>
-        </thead>
-        <tbody>
-        <tr class="fragment" data-fragment-index=1>
-          <td># clients</td>
-          <td>15</td>
-        </tr>
-        <tr class="fragment" data-fragment-index=1>
-          <td>send delay</td>
-          <td>1ms</td>
-        </tr>
-        <tr class="fragment" data-fragment-index=1>
-          <td>msg size</td>
-          <td>21 bytes</td>
-        </tr>
-        <tr class="fragment" data-fragment-index=2>
-          <td>total msg recv</td>
-          <td>638,316</td>
-        </tr>
-        <tr class="fragment" data-fragment-index=2>
-          <td>total msg sent</td>
-          <td>8,935,859</td>
-        </tr>
-        <tr class="fragment" data-fragment-index=3>
-          <td>msg/sec</td>
-          <td>161,983</td>
-        </tr>
-        </tbody>
-      </table>
+        <table>
+          <thead>
+            <tr><th>Var</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+          <tr class="fragment" data-fragment-index=1>
+            <td># clients</td>
+            <td>15</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=1>
+            <td>send delay</td>
+            <td>1ms</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=1>
+            <td>msg size</td>
+            <td>21 bytes</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=2>
+            <td>total msg recv</td>
+            <td>638,316</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=2>
+            <td>total msg sent</td>
+            <td>8,935,859</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=3>
+            <td>msg/sec</td>
+            <td>161,983</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
       <p class="fragment" data-fragment-index=4>zero optimizations</p>
       <p class="fragment" data-fragment-index=5>running in debug mode</p>
     </section>
@@ -420,15 +421,23 @@ void callback(ec, buffer);</code></pre></dd>
     <section style="text-align: left;">
       <h1>THE END</h1>
       <div class="fragment">
-      <h3>Thanks in part to..</h3>
-      <ul>
-        <li><a href="http://lab.hakim.se/reveal-js/">http://lab.hakim.se/reveal-js/</a></li>
-      </ul>
+        <h3>Thanks in part to..</h3>
+        <ul>
+          <li><a href="https://twistedmatrix.com/trac/">Twisted</a></li>
+          <li><a href="http://www.boost.org/doc/libs/1_57_0/doc/html/boost_asio.html">boost::asio</a></li>
+          <li><a href="http://lab.hakim.se/reveal-js/">reveal.js</a></li>
+        </ul>
+      </div>
     </section>
 
     <section style="text-align: center">
       <h1>You Guys!</h1>
       <h3 class="fragment">(and polyglot)</h3>
+    </section>
+
+    <section style="text-align: center">
+      <h3>presentation available at</h3>
+      <h3><a href="https://github.com/kneufeld/chatroom">https://github.com/kneufeld/chatroom</a></h3>
     </section>
 
   </div><!-- slides -->
