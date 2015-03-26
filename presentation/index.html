@@ -356,7 +356,7 @@ read(fd, callback);
             self.decoder = msgpack.Unpacker()
 
         def connectionMade(self):
-            global clients
+            global clients  # better ways, e.g. Factory
 
         def connectionLost(self, reason):
             pass
@@ -372,7 +372,7 @@ read(fd, callback);
             self.decoder = msgpack.Unpacker()
 
         def connectionMade(self):
-            global clients
+            global clients  # better ways, e.g. Factory
             clients.add(self)
 
         def connectionLost(self, reason):
@@ -403,17 +403,15 @@ read(fd, callback);
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
-        def __init__(self):
-            self.decoder = msgpack.Unpacker()
-
-        def connectionMade(self):
-            global clients
-            clients.add(self)
-
-        def connectionLost(self, reason):
-            global clients
-            clients.remove(self)
-
+        # ...
+        def dataReceived(self, data):
+            pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
               </code></pre>
@@ -421,15 +419,7 @@ read(fd, callback);
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
-        def __init__(self):
-            self.decoder = msgpack.Unpacker()
-
-        def connectionMade(self):
-            pass  # could send challenge, greeting to client
-
-        def connectionLost(self, reason):
-            pass  # sadness
-
+        # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
             msg = self.decoder.next()
@@ -438,6 +428,7 @@ read(fd, callback);
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
+        # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
             try:
@@ -449,6 +440,7 @@ read(fd, callback);
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
+        # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder.next():
@@ -484,7 +476,7 @@ read(fd, callback);
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             packed = msgpack.packb(msg)
-            global clients  # better ways, e.g. Factory
+            global clients
 
         def dataReceived(self, data):
             self.decoder.feed(data)
@@ -497,7 +489,21 @@ read(fd, callback);
               <pre><code>class ChatServer(Protocol):
         def got_message(self, msg):
             packed = msgpack.packb(msg)
-            global clients  # better ways, e.g. Factory
+            global clients
+            for proto in clients:
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+          </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+            global clients
             for proto in clients:
                 proto.transport.write(packed)
 
@@ -541,7 +547,7 @@ class ChatFactory(Factory):
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        proto = ChatServer()
+        return ChatServer()
               </code></pre>
         </section>
         <section data-transition="none">
@@ -549,40 +555,7 @@ class ChatFactory(Factory):
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-              </code></pre>
-        </section>
-        <section data-transition="none">
-          <h2>twisted</h2>
-              <pre><code>
-class ChatFactory(Factory):
-    def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-        clients.append(proto)
-              </code></pre>
-        </section>
-        <section data-transition="none">
-          <h2>twisted</h2>
-              <pre><code>
-class ChatFactory(Factory):
-    def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-        clients.append(proto)
-        return proto
-              </code></pre>
-        </section>
-        <section data-transition="none">
-          <h2>twisted</h2>
-              <pre><code>
-class ChatFactory(Factory):
-    def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-        clients.append(proto)
-        return proto
+        return ChatServer()
 
 def main(reactor):
               </code></pre>
@@ -592,10 +565,7 @@ def main(reactor):
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-        clients.append(proto)
-        return proto
+        return ChatServer()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
@@ -606,14 +576,11 @@ def main(reactor):
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-        clients.append(proto)
-        return proto
+        return ChatServer()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
-    return endpoint.listen(ChatFactory())
+    endpoint.listen(ChatFactory())
               </code></pre>
         </section>
         <section data-transition="none">
@@ -621,16 +588,27 @@ def main(reactor):
               <pre><code>
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        proto = ChatServer()
-        global clients
-        clients.append(proto)
-        return proto
+        return ChatServer()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
-    return endpoint.listen(ChatFactory())
+    endpoint.listen(ChatFactory())
+    return Deferred()
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        return ChatServer()
 
-react(main)
+def main(reactor):
+    endpoint = TCP4ServerEndpoint(reactor, 10001)
+    endpoint.listen(ChatFactory())
+    return Deferred()
+
+react(main)  # from twisted.internet.task
               </code></pre>
         </section>
     </section>
