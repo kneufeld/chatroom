@@ -89,7 +89,7 @@ void chat_session::do_read()
         boost::asio::buffer( m_read_buff.data(), 1024 ),
         [this, self]( boost::system::error_code ec, std::size_t length )
     {
-        TL_S_TRACE << *this << ": recv'd " << length << " bytes";
+        TL_S_DEBUG << *this << ": recv'd " << length << " bytes";
 
         if( ec )
         {
@@ -127,7 +127,7 @@ void chat_session::do_read()
             {
                 chat_message msg;
                 result.get().convert( &msg );
-                TL_S_DEBUG << *self << ": " << msg;
+                TL_S_TRACE << *self << ": " << msg;
 
                 m_room.deliver( self, msg );
             }
