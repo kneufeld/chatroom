@@ -44,9 +44,10 @@ dl { text-align: left; }
 dl dt { text-align: left; }
 dl dd { text-align: left; }
 
-img { 
+img {
   background-color: white !important;
-  text-shadow: none;
+text-shadow: none;
+border: none;
 }
 
 section
@@ -57,6 +58,10 @@ section
 .small
 {
   font-size: 75% !important;
+}
+
+.smallcaps, .caps {
+  font-variant:small-caps !important;
 }
 
 tt, code, pre {
@@ -143,40 +148,45 @@ pre > code
     <section>
       <h2>Definitions...</h2>
         <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Event_%28computing%29">event</a></dt>
+          <dd><span class="aside">(verb)</span> an occurence requiring
+            handling, usually with associated
+            data <span class="aside">(network, timer, user input,
+            etc)</span>
+          </dd>
+        </dl>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Thread_%28computing%29">thread</a></dt>
+          <dd><span class="aside">(noun)</span> a task that runs in parallel, blocking for I/O </dd>
+        </dl>
+        <dl class="fragment">
+          <dt><a href="http://en.wikipedia.org/wiki/Context_switch">context switch</a></dt>
+          <dd><span class="aside">(verb)</span> storing/restoring the state of a thread
+          before/after getting <span class="caps">cpu</span> time. expensive. </dd>
+        </dl>
+    </section>
+
+    <section>
+      <h2>Definitions…</h2>
+        <dl class="fragment">
           <dt><a href="http://en.wikipedia.org/wiki/Synchronization_%28computer_science%29">syncronous</a></dt>
-          <dd>(concept) a blocking call, does not return until data or error
-          <pre><code>ec = read(fd, buffer);</code></pre>
+          <dd><span class="aside">(concept)</span> a blocking call, does not return until data or error
+          <pre><code>error = read(fd, buffer);</code></pre>
         </dd>
         </dl>
         <br/>
         <dl class="fragment">
           <dt><a href="http://en.wikipedia.org/wiki/Asynchronous_I/O">asyncronous</a></dt>
-          <dd>(concept) a non-blocking call, returns instantly, callback happens <em>later</em>
-          <pre><code data-trim>read(fd, callback);
-// as a different function
-void callback(ec, buffer);</code></pre></dd>
+          <dd><span class="aside">(concept)</span> a non-blocking
+          call, returns instantly; callback happens <em>later</em>
+          with data
+          <pre><code data-trim>
+void callback(error, buffer) { /* ... */ }
+read(fd, callback);
+</code></pre></dd>
         </dl>
     </section>
-
-    <section>
-      <h2>Definitions...</h2>
-        <dl class="fragment">
-          <dt><a href="http://en.wikipedia.org/wiki/Event_%28computing%29">event</a></dt>
-          <dd>(verb) an occurence that requires some sort of handling,
-          usually with associate data</dd>
-        </dl>
-        <dl class="fragment">
-          <dt><a href="http://en.wikipedia.org/wiki/Thread_%28computing%29">thread</a></dt>
-          <dd>(noun) the smallest sequence of instructions that can be
-          independently scheduled and run</dd>
-        </dl>
-        <dl class="fragment">
-          <dt><a href="http://en.wikipedia.org/wiki/Context_switch">context switch</a></dt>
-          <dd>(verb) storing/restoring the state of a thread
-          before/after getting cpu time. expensive</dd>
-        </dl>
-    </section>
-
+<!--
     <section>
       <h2>Definitions...</h2>
         <dl class="fragment">
@@ -190,25 +200,26 @@ void callback(ec, buffer);</code></pre></dd>
           passing any accociated data to the handler. asynchronous variant of reactor</dd>
         </dl>
     </section>
+-->
 
-    <section>
+    <section data-transition="none">
       <h2>Threaded I/O</h2>
-      <img src="images/threaded-io.svg" style="padding: 0.5em; border: none;">
+      <img src="images/threaded-io.svg" style="padding: 0.5em; height: 600px; border: none;">
     </section>
 
-    <section>
+    <section data-transition="none">
       <h2>Threaded I/O</h2>
-      <img src="images/threaded-io-contextswitches.svg" style="padding: 0.5em; border: none;">
+      <img src="images/threaded-io-contextswitches.svg" style="padding: 0.5em; height: 600px; border: none;">
     </section>
 
-    <section>
+    <section data-transition="none">
       <h2>Event-based I/O</h2>
-      <img src="images/event-based-io.svg" style="padding: 0.5em; height: 500px;">
+      <img src="images/event-based-io.svg" style="padding: 0.5em; height: 600px; border: none;">
     </section>
 
-    <section>
+    <section data-transition="none">
       <h2>Event-based I/O</h2>
-      <img src="images/event-based-io-arrows.svg" style="padding: 0.5em; height: 500px;">
+      <img src="images/event-based-io-arrows.svg" style="padding: 0.5em; height: 600px; border: none;">
     </section>
 
     <section>
@@ -228,9 +239,11 @@ void callback(ec, buffer);</code></pre></dd>
         <li class="fragment">&ldquo;event&rdquo; &rarr; run code</li>
         <li class="fragment">event: timer, data received, data sent<br/><span class="aside">(network, user, disk, etc.)</span></li>
         <li class="fragment">code: &ldquo;callback&rdquo; <span class="aside">errback</span></li>
-        <li class="fragment">Pattern: Reactor or Proactor <span class="aside">(&ldquo;Gang of Four&rdquo;)</span></li>
-        <li class="fragment">Twisted: reactor</li>
-        <li class="fragment">ASIO: both</li>
+        <li class="fragment">Pattern: Reactor or Proactor</li>
+        <li class="fragment">unit-test callbacks, errbacks</li>
+
+<!--        <li class="fragment">Twisted: reactor</li>
+        <li class="fragment">ASIO: both</li> -->
       </ul>
     </section>
 
@@ -268,18 +281,35 @@ void callback(ec, buffer);</code></pre></dd>
     </section>
 -->
 
+    <section>
+      <h2>example: chat server + client</h2>
+      <ul>
+        <li class="fragment">msgpack encoding <span class="aside">(and framing)</span></li>
+        <li class="fragment">list-of-strings: <code style="font: 80% monospace !important;">['nickname', 'insightful message']</code></li>
+        <li class="fragment">TCP, 10001</li>
+        <li class="fragment"><tt>thula.meejah.ca:10001</tt></li>
+      </ul>
+    </section>
 
     <!-- set data-state to moon before/after setting solarized -->
     <section data-state="solarized">
       <h2>twisted</h2>
-      <pre style="font-size: 100%;">git clone https://meejah.ca/polyglot-txchat</pre>
+<!--      <pre style="font-size: 100%;">git clone https://meejah.ca/polyglot-txchat</pre> -->
       <ul>
         <li class="fragment">https://twistedmatrix.com</li>
         <li class="fragment">Since 2001</li>
-        <li class="fragment">330k Line of Ccode <span class="aside">(168k is tests)</span></li>
-        <li class="fragment">TCP, UDP, ... SSH, HTTPS, XMPP</li>
-        <li class="fragment">Servers, clients, ...</li>
+        <li class="fragment">330k Line of Code <span class="aside">(168k is tests)</span></li>
+        <li class="fragment">TCP, UDP, ICMP … SSH, HTTPS, XMPP</li>
+        <li class="fragment">Console, serial, GPS, timers …</li>
+        <li class="fragment">Servers or clients</li>
+        <li class="fragment">Interop with other event-loops <span class="aside">(Qt, gtk, pygame, pyglet, asyncio, win32</span></span></li>
+        <li class="fragment">Many, many other batteries are included</li>
       </ul>
+      <aside class="notes">
+        (longer than google!)
+        protocols:
+        XXX list moar protos here
+      </aside>
     </section>
 
     <section>
@@ -293,53 +323,314 @@ void callback(ec, buffer);</code></pre></dd>
     </section>
 
     <section> <!-- dep. injection -->
-        <section data-transition="none"> <!-- dep. injection -->
+        <section data-transition="none">
           <h2>twisted</h2>
-              <pre><code>class ChatServer(Protocol):
-        def __init__(self, factory, decoder=msgpack.Unpacker()):
-            self.factory = factory
-            self.decoder = decoder
-
-        def dataReceived(self, data):
-            pass
-        def makeConnection(self, transport):
-            pass
-        def connectionMade(self, reason):
-            pass
-        def connectionLost(self, reason):
-            pass
-              </code></pre>
+              <pre class="fragment"><code>class ChatServer(Protocol):</code></pre>
+              <pre class="fragment"><code>    def connectionMade(self):
+            pass</code></pre>
+              <pre class="fragment"><code>    def connectionLost(self, reason):
+            pass</code></pre>
+<pre class="fragment"><code>    def dataReceived(self, data):
+            pass</code></pre>
         </section>
-
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
-        def __init__(self, factory, decoder=msgpack.Unpacker()):
-            self.factory = factory
-            self.decoder = decoder
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def connectionMade(self):
+            pass
+
+        def connectionLost(self, reason):
+            pass
+
+        def dataReceived(self, data):
+            pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def connectionMade(self):
+            global clients
+
+        def connectionLost(self, reason):
+            pass
+
+        def dataReceived(self, data):
+            pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def connectionMade(self):
+            global clients
+            clients.add(self)
+
+        def connectionLost(self, reason):
+            pass
+
+        def dataReceived(self, data):
+            pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def connectionMade(self):
+            global clients
+            clients.add(self)
+
+        def connectionLost(self, reason):
+            global clients
+            clients.remove(self)
+
+        def dataReceived(self, data):
+            pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def connectionMade(self):
+            global clients
+            clients.add(self)
+
+        def connectionLost(self, reason):
+            global clients
+            clients.remove(self)
 
         def dataReceived(self, data):
             self.decoder.feed(data)
-            for msg in self.decoder:  # XXX
-                self.got_message(msg)
-        def makeConnection(self, transport):
-            pass
-        def connectionMade(self, reason):
-            pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def connectionMade(self):
+            pass  # could send challenge, greeting to client
+
         def connectionLost(self, reason):
+            pass  # sadness
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            msg = self.decoder.next()
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            try:
+                msg = self.decoder.next()
+            except StopIteration:
+                print("No message yet.")
+          </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                msg = self.decoder.next()
+          </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def got_message(self, msg):
             pass
-              </code></pre>
-        </section>
 
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+          </code></pre>
+        </section>
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
-              </code></pre>
-        </section>
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
 
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+          </code></pre>
+        </section>
         <section data-transition="none">
           <h2>twisted</h2>
               <pre><code>class ChatServer(Protocol):
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+            global clients  # better ways, e.g. Factory
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+          </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+            global clients  # better ways, e.g. Factory
+            for proto in clients:
+                proto.transport.write(packed)
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+          </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def got_message(self, msg):
+            global clients
+            packed = msgpack.packb(msg)
+            for proto in clients:
+                proto.transport.write(packed)
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+          </code></pre>
+        </section>
+    </section>
+
+    <section> <!-- Factory -->
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        pass
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+        clients.append(proto)
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+        clients.append(proto)
+        return proto
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+        clients.append(proto)
+        return proto
+
+def main(reactor):
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+        clients.append(proto)
+        return proto
+
+def main(reactor):
+    endpoint = TCP4ServerEndpoint(reactor, 10001)
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+        clients.append(proto)
+        return proto
+
+def main(reactor):
+    endpoint = TCP4ServerEndpoint(reactor, 10001)
+    return endpoint.listen(ChatFactory())
+              </code></pre>
+        </section>
+        <section data-transition="none">
+          <h2>twisted</h2>
+              <pre><code>
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        proto = ChatServer()
+        global clients
+        clients.append(proto)
+        return proto
+
+def main(reactor):
+    endpoint = TCP4ServerEndpoint(reactor, 10001)
+    return endpoint.listen(ChatFactory())
+
+react(main)
               </code></pre>
         </section>
     </section>
@@ -461,6 +752,7 @@ slideNumber: true,
 
 width: 1024,
 height: 768,
+//fragments: false,
 
 transition: 'slide', // none/fade/slide/convex/concave/zoom
 
