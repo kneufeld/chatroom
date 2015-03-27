@@ -199,7 +199,7 @@ void chat_session::close()
 
 chat_server::chat_server( boost::asio::io_service& io_service,
                           const tcp::endpoint& endpoint )
-    : acceptor_( io_service, endpoint ),
+    : m_acceptor( io_service, endpoint ),
       m_socket( io_service ),
       m_room( lexical_cast<std::string>( endpoint.port() ) )
 {
@@ -209,7 +209,7 @@ chat_server::chat_server( boost::asio::io_service& io_service,
 
 void chat_server::do_accept()
 {
-    acceptor_.async_accept( m_socket,
+    m_acceptor.async_accept( m_socket,
                             [this]( boost::system::error_code ec )
     {
         if( ec )
@@ -219,7 +219,8 @@ void chat_server::do_accept()
         else
         {
             TL_S_INFO << "accepted connection from: " << m_socket.remote_endpoint();
-            std::make_shared<chat_session>( std::move( m_socket ), m_room )->start();
+            auto session = std::make_shared<chat_session>( std::move( m_socket ), m_room );
+            session->start();
         }
 
         do_accept();
@@ -252,6 +253,6 @@ std::ostream& operator<<( std::ostream& out, const chat_session& obj )
 
 std::ostream& operator<<( std::ostream& out, const chat_server& obj )
 {
-    out << "chat_server: " << obj.acceptor_.local_endpoint();
+    out << "chat_server: " << obj.m_acceptor.local_endpoint();
     return out;
 }

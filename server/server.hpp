@@ -28,6 +28,8 @@ public:
     chat_session( tcp::socket socket, chat_room& room );
     ~chat_session();
 
+    tcp::socket& socket() { return m_socket; }
+
     void start();
     void deliver( const chat_message& msg );
     void close();
@@ -81,7 +83,7 @@ public:
 private:
     void do_accept();
 
-    tcp::acceptor acceptor_;
-    tcp::socket m_socket;
-    chat_room m_room;
+    tcp::acceptor   m_acceptor;
+    tcp::socket     m_socket;
+    chat_room       m_room;
 };
