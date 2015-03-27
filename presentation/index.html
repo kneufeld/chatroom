@@ -142,6 +142,8 @@ pre > code
         <li class="fragment">Programming with Twisted</li>
         <li class="fragment">Programming with boost::asio</li>
       </ul>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
@@ -155,6 +157,10 @@ pre > code
         <li class="fragment">Threading: CPU</li>
         <li class="fragment">Event based: I/O</li>
       </ul>
+        <aside class="notes">
+           mike: 2 kinds programs
+           kurt: threading, event-based
+        </aside>
     </section>
 
     <section>
@@ -176,6 +182,8 @@ pre > code
           <dd><span class="aside">(verb)</span> storing/restoring the state of a thread
           before/after getting <span class="caps">cpu</span> time. expensive. </dd>
         </dl>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
@@ -197,26 +205,36 @@ void callback(error, buffer) { /* ... */ }
 read(fd, callback);
 </code></pre></dd>
         </dl>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-transition="none">
       <h2>Threaded I/O</h2>
       <img src="images/threaded-io.svg" style="padding: 0.5em; height: 600px; border: none;">
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-transition="none">
       <h2>Threaded I/O</h2>
       <img src="images/threaded-io-contextswitches.svg" style="padding: 0.5em; height: 600px; border: none;">
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-transition="none">
       <h2>Event-based I/O</h2>
       <img src="images/event-based-io.svg" style="padding: 0.5em; height: 600px; border: none;">
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-transition="none">
       <h2>Event-based I/O</h2>
       <img src="images/event-based-io-arrows.svg" style="padding: 0.5em; height: 600px; border: none;">
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
@@ -228,6 +246,8 @@ read(fd, callback);
         <li class="fragment">One core?! <span class="aside">(e.g. share socket)</span></li>
         <li class="fragment">Repeatability/testing</li>
       </ul>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-state="moon">
@@ -242,6 +262,8 @@ read(fd, callback);
 <!--        <li class="fragment">Twisted: reactor</li>
         <li class="fragment">ASIO: both</li> -->
       </ul>
+        <aside class="notes">
+        </aside>
     </section>
 
 <!--
@@ -259,6 +281,8 @@ read(fd, callback);
       therefore infinite cores does not yield infinite speedup.</p>
       <p class="fragment">But mostly threads suck because threaded programming
       is <em>hard</em>.</p>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-state="moon">
@@ -275,6 +299,8 @@ read(fd, callback);
       about asynchronously.</p>
       <p class="fragment">A function that registers itself to be notified on a given
       event is named a <tt>callback</tt> and that callback handles the event.</p>
+        <aside class="notes">
+        </aside>
     </section>
 -->
 
@@ -286,11 +312,15 @@ read(fd, callback);
         <li class="fragment"><span class="caps">tcp</span> 10001</li>
         <li class="fragment"><tt>thula.meejah.ca:10001</tt></li>
       </ul>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
       <h2>chat server sequence</h2>
       <img src="images/msg_forward.png" height=500/>
+        <aside class="notes">
+        </aside>
     </section>
 
     <!-- set data-state to moon before/after setting solarized -->
@@ -312,6 +342,8 @@ read(fd, callback);
         protocols:
         XXX list moar protos here
       </aside>
+        <aside class="notes">
+        </aside>
     </section>
 
 <!--
@@ -323,11 +355,15 @@ read(fd, callback);
         <li class="fragment">Protocols: <code>ClientFactory, ServerFactory</code></li>
         <li class="fragment">Follow <code>IProtocol</code></li>
       </ul>
+        <aside class="notes">
+        </aside>
     </section>
 -->
     <section data-transition="none">
       <h2>twisted infographic</h2>
       <img src="images/twisted-class-diagram.svg" style="padding: 0.5em; width: 1000px; border: none;">
+        <aside class="notes">
+        </aside>
     </section>
 
     <section> <!-- dep. injection -->
@@ -340,6 +376,8 @@ read(fd, callback);
             pass</code></pre>
 <pre class="fragment"><code class="lang-python">    def dataReceived(self, data):
             pass</code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -356,6 +394,8 @@ read(fd, callback);
         def dataReceived(self, data):
             pass
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -372,6 +412,8 @@ read(fd, callback);
         def dataReceived(self, data):
             pass
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -389,6 +431,8 @@ read(fd, callback);
         def dataReceived(self, data):
             pass
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -407,6 +451,8 @@ read(fd, callback);
         def dataReceived(self, data):
             pass
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -415,6 +461,8 @@ read(fd, callback);
         def dataReceived(self, data):
             pass
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -423,6 +471,8 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -432,6 +482,8 @@ read(fd, callback);
             self.decoder.feed(data)
             msg = self.decoder.next()
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -444,6 +496,8 @@ read(fd, callback);
             except StopIteration:
                 print("No message yet.")
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -454,6 +508,8 @@ read(fd, callback);
             for msg in self.decoder:
                 # handle msg
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -466,6 +522,8 @@ read(fd, callback);
             for msg in self.decoder:
                 self.got_message(msg)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -478,6 +536,8 @@ read(fd, callback);
             for msg in self.decoder.next():
                 self.got_message(msg)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -491,6 +551,8 @@ read(fd, callback);
             for msg in self.decoder.next():
                 self.got_message(msg)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -505,6 +567,8 @@ read(fd, callback);
             for msg in self.decoder.next():
                 self.got_message(msg)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -520,6 +584,8 @@ read(fd, callback);
             for msg in self.decoder.next():
                 self.got_message(msg)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -538,6 +604,8 @@ read(fd, callback);
             for msg in self.decoder.next():
                 self.got_message(msg)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -564,6 +632,8 @@ read(fd, callback);
             global clients
             clients.remove(self)
           </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
     </section>
 
@@ -575,6 +645,8 @@ class ChatFactory(Factory):
     def buildProtocol(self, addr):
         pass
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -583,6 +655,8 @@ class ChatFactory(Factory):
     def buildProtocol(self, addr):
         return ChatServer()
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -593,6 +667,8 @@ class ChatFactory(Factory):
 
 def main(reactor):
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -604,6 +680,8 @@ class ChatFactory(Factory):
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -616,6 +694,8 @@ def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
     endpoint.listen(ChatFactory())
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -629,6 +709,8 @@ def main(reactor):
     endpoint.listen(ChatFactory())
     return Deferred()  # loop forever
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
@@ -644,6 +726,8 @@ def main(reactor):
 
 react(main)  # from twisted.internet.task
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
     </section>
 
@@ -653,6 +737,8 @@ react(main)  # from twisted.internet.task
           <h2>client protocol</h2>
               <pre><code class="lang-python">class ChatClient(Protocol):
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -660,6 +746,8 @@ react(main)  # from twisted.internet.task
     def __init__(self, done):
         self.done = done
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -668,6 +756,8 @@ react(main)  # from twisted.internet.task
         self.done = done
         self.unpacker = msgpack.Unpacker()
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -678,6 +768,8 @@ react(main)  # from twisted.internet.task
 
     def connectionLost(self, reason):
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -689,6 +781,8 @@ react(main)  # from twisted.internet.task
     def connectionLost(self, reason):
         self.done.callback(reason)
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -702,6 +796,8 @@ react(main)  # from twisted.internet.task
 
     def dataReceived(self, data):
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -716,6 +812,8 @@ react(main)  # from twisted.internet.task
     def dataReceived(self, data):
         self.unpacker.feed(data)
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -731,6 +829,8 @@ react(main)  # from twisted.internet.task
         self.unpacker.feed(data)
         for msg in self.unpacker:
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -747,6 +847,8 @@ react(main)  # from twisted.internet.task
         for msg in self.unpacker:
             print("{}: {}".format(*tuple(msg)))
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -765,6 +867,8 @@ react(main)  # from twisted.internet.task
 
     def sendMessage(self, nick, data):
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -784,6 +888,8 @@ react(main)  # from twisted.internet.task
     def sendMessage(self, nick, data):
         data = msgpack.packb([nick, msg])
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
         <section data-transition="none">
           <h2>client protocol</h2>
@@ -804,6 +910,8 @@ react(main)  # from twisted.internet.task
         data = msgpack.packb([nick, msg])
         self.transport.write(data)
               </code></pre>
+        <aside class="notes">
+        </aside>
         </section>
     </section>
 
@@ -812,12 +920,16 @@ react(main)  # from twisted.internet.task
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
 from twisted.internet.stdio import StandardIO
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -825,6 +937,8 @@ from twisted.internet.stdio import StandardIO
 from twisted.internet.stdio import StandardIO
 class StandardInput(LineReceiver, StandardIO):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -833,6 +947,8 @@ from twisted.internet.stdio import StandardIO
 class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -842,6 +958,8 @@ class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -853,6 +971,8 @@ class StandardInput(LineReceiver, StandardIO):
         return self.protocol.sendMessage(self.nick, line)
 
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -865,6 +985,8 @@ class StandardInput(LineReceiver, StandardIO):
 
     def __init__(self, nick, proto):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -879,6 +1001,8 @@ class StandardInput(LineReceiver, StandardIO):
         self.nick = nick
         self.protocol = proto
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -895,6 +1019,8 @@ class StandardInput(LineReceiver, StandardIO):
 
     def connectionLost(self, reason):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
@@ -912,6 +1038,8 @@ class StandardInput(LineReceiver, StandardIO):
     def connectionLost(self, reason):
         self.protocol.transport.loseConnection()
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section>
 
@@ -920,12 +1048,16 @@ class StandardInput(LineReceiver, StandardIO):
         <h2>Testing!</h2>
         <pre><code class="lang-python">from twisted.test import proto_helpers
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
         <pre><code class="lang-python">from twisted.test import proto_helpers
 import pytest
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -935,6 +1067,8 @@ import pytest
 @pytest.fixture(scope='function')
 def proto(factory):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -948,6 +1082,8 @@ def proto(factory):
       <aside class="notes">
         Only important thing: test-controlled TRANSPORT!!
       </aside>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -962,11 +1098,15 @@ def proto(factory):
     p.makeConnection(transport)
     return p
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
         <pre><code class="lang-python">def test_two_messages_at_once(proto):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -975,6 +1115,8 @@ def proto(factory):
     test_message0 = ['ZoP', 'Beautiful is better than ugly.']
     test_message1 = ['ZoP', 'Explicit is better than implicit.']
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -985,6 +1127,8 @@ def proto(factory):
     data = msgpack.packb(test_message0)
     data += msgpack.packb(test_message1)
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -998,6 +1142,8 @@ def proto(factory):
     # send our test-messages over the protocol, all at once
     proto.dataReceived(data)
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1012,11 +1158,15 @@ def proto(factory):
     assert messages[0] == test_message0
     assert messages[1] == test_message1
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
         <pre><code class="lang-python">def test_message_trickle(proto):
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1024,6 +1174,8 @@ def proto(factory):
     test_message = ['albert', 'The only source of knowledge is experience.']
     data = msgpack.packb(test_message)
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1034,6 +1186,8 @@ def proto(factory):
     # send our message in two chunks
     proto.dataReceived(data[:5])
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1045,6 +1199,8 @@ def proto(factory):
     proto.dataReceived(data[:5])
     assert proto.transport.value() == ''
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1060,6 +1216,8 @@ def proto(factory):
       <aside class="notes">
         state-machine walking!
       </aside>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1076,6 +1234,8 @@ def proto(factory):
     sent_data = proto.transport.value()
     assert msgpack.unpackb(sent_data) == test_message
         </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section>
 
@@ -1093,6 +1253,8 @@ test/test_server.py .....
 
 ================== 9 passed in 0.04 seconds ==================
 </code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section>
 
@@ -1110,12 +1272,16 @@ test/test_server.py .....
         <dd>a cross-platform C++ library for network and low-level I/O programming</dd>
       </dl>
     </div>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
       <h2>asio connection sequence</h2>
       <p>simplified</p>
       <img src="images/tcp_start.png" height=500/>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section data-transition="none">
@@ -1129,6 +1295,8 @@ public:
 
   MSGPACK_DEFINE( nickname, message );
 };</code></pre>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section id="cpp_client_code">
@@ -1139,6 +1307,8 @@ public:
 class posix_chat_client // equiv to txchat.ChatClient
 {
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1153,6 +1323,8 @@ public:
         tcp::resolver::iterator endpoint_iterator,
         std::string nickname );
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1169,6 +1341,8 @@ public:
 
 private:
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1187,6 +1361,8 @@ private:
 
     void handle_connect( const error_code& ec );
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1209,6 +1385,8 @@ private:
     void cb_read_socket( const error_code& ec, std::size_t bytes_recv );
     void cb_write_socket( const error_code& ec, std::size_t length );
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1234,10 +1412,15 @@ private:
     void listen_on_input();
     void cb_read_input( const error_code& ec, std::size_t length );
 
-    // member variables etc.
+    tcp::socket m_socket;
+    // other member variables etc
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
@@ -1258,6 +1441,8 @@ private:
                                 asio::placeholders::error );
     asio::async_connect( m_socket, endpoint_iterator, handler );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1276,6 +1461,8 @@ private:
         <aside class="notes">
           Assume going forward I'm always checking error codes and doing something
           appropriate like logging and exiting.
+        </aside>
+        <aside class="notes">
         </aside>
       </section>
 
@@ -1300,6 +1487,8 @@ private:
 
     asio::async_read_until( m_stdin, m_input_buffer, '\n', handler );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1318,6 +1507,8 @@ private:
 
     listen_on_socket(); // read more bytes
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1326,12 +1517,14 @@ private:
 {
     if( error ) ; // handle it and return
 
-    // pack up users string
+    // pack up user's string
 
     auto buffer = asio::buffer( m_packer.data(), m_packer.size() );
     auto handler = boost::bind( &posix_chat_client::cb_write_socket, this, asio::placeholders::error, asio::placeholders::bytes_transferred );
     asio::async_write( m_socket, buffer, handler );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1341,6 +1534,8 @@ private:
     if( error ) ; // handle it and return
     listen_on_input();
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section><!-- cpp_client_code -->
 
@@ -1370,6 +1565,8 @@ private:
            <p>But we need to see how we accept a connection first</p>
            <p>Server is written in C++11 style</p>
         </aside>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1390,6 +1587,8 @@ private:
     member_set      m_members;
     std::string     m_name;
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section>
 
@@ -1409,6 +1608,8 @@ private:
     tcp::socket   m_socket;
     chat_room     m_room;
 };</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
       <section data-transition="none">
         <h3>asio server <span class="aside">acceptor</span></h3>
@@ -1427,24 +1628,16 @@ void chat_server::do_accept()
         {
             TL_S_INFO << "accepted connection from: " << m_socket.remote_endpoint();
             auto session = std::make_shared&lt;chat_session>( std::move( m_socket ), m_room );
-            session->start();
+            session->do_read();
         }
 
         do_accept();
     } );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section>
-
-    <section>
-      <section data-transition="none>"
-        <h3>asio server <span class="aside">session</span></h3>
-        <pre><code class="cpp">void chat_session::start()
-{
-    m_room.join( shared_from_this() );
-    do_read();
-}</code></pre>
-      </section>
 
       <section data-transition="none">
         <h3>asio server <span class="aside">read from socket</span></h3>
@@ -1469,6 +1662,8 @@ void chat_server::do_accept()
         do_read();
     } );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1487,6 +1682,8 @@ void chat_server::do_accept()
         // log and increment counters
     } );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1501,6 +1698,8 @@ void chat_server::do_accept()
     auto self( shared_from_this() );
     m_room.leave( self );
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1530,6 +1729,8 @@ void chat_server::do_accept()
 
     return 0;
 }</code></pre>
+        <aside class="notes">
+        </aside>
       </section>
     </section><!-- cpp_server_code -->
 
@@ -1542,6 +1743,8 @@ void chat_server::do_accept()
         <li><code>boost::asio</code> with C++11 example code</li>
         <li><tt>hammer</tt> client mixes threads and events</li>
       </ul>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
@@ -1576,6 +1779,8 @@ void chat_server::do_accept()
       </div>
       <p class="fragment" data-fragment-index=4>zero optimizations</p>
       <p class="fragment" data-fragment-index=5>running in debug mode</p>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section>
@@ -1594,6 +1799,8 @@ $ txchat client --nick meejah --endpoint tcp:thula.meejah.ca:20002
 $ client kurt thula.meejah.ca 20002
 $ client kurt thula.meejah.ca 10001
 </code></li>
+        <aside class="notes">
+        </aside>
       </section>
     </section>
 
@@ -1609,16 +1816,22 @@ $ client kurt thula.meejah.ca 10001
           <li><a href="http://lab.hakim.se/reveal-js/">reveal.js</a></li>
         </ul>
       </div>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section style="text-align: center">
       <h1>You Guys!</h1>
       <h3 class="fragment">(and polyglot)</h3>
+        <aside class="notes">
+        </aside>
     </section>
 
     <section style="text-align: center">
       <h3>presentation available at</h3>
       <h3><a href="https://github.com/kneufeld/chatroom">https://github.com/kneufeld/chatroom</a></h3>
+        <aside class="notes">
+        </aside>
     </section>
 
   </div><!-- slides -->
