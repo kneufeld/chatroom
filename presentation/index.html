@@ -539,6 +539,32 @@ read(fd, callback);
                 self.got_message(msg)
           </code></pre>
         </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatServer(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def got_message(self, msg):
+            global clients
+            packed = msgpack.packb(msg)
+            for proto in clients:
+                proto.transport.write(packed)
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder.next():
+                self.got_message(msg)
+
+        def connectionMade(self):
+            global clients
+            clients.add(self)
+
+        def connectionLost(self, reason):
+            global clients
+            clients.remove(self)
+          </code></pre>
+        </section>
     </section>
 
     <section> <!-- Factory -->
@@ -1107,90 +1133,108 @@ public:
 
     <section id="cpp_client_code">
       <section data-transition="none">
-        <h3>asio client</h3>
-        <pre><code class="lang-cpp">class posix_chat_client // equiv to txchat.ChatClient
+        <h3>asio client <span class="aside">header</span></h3>
+        <pre><code class="lang-cpp">using boost::system::error_code;
+
+class posix_chat_client // equiv to txchat.ChatClient
 {
 };</code></pre>
       </section>
 
       <section data-transition="none">
-        <h3>asio client</h3>
-        <pre><code class="lang-cpp">class posix_chat_client // equiv to txchat.ChatClient
+        <h3>asio client <span class="aside">header</span></h3>
+        <pre><code class="lang-cpp">using boost::system::error_code;
+
+class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
-    posix_chat_client( boost::asio::io_service& io_service,
+    posix_chat_client(
+        boost::asio::io_service& io_service,
         tcp::resolver::iterator endpoint_iterator,
         std::string nickname );
 };</code></pre>
       </section>
 
       <section data-transition="none">
-        <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
+        <h3>asio client <span class="aside">header</span></h3>
+        <pre><code class="cpp">using boost::system::error_code;
+
+class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
-    posix_chat_client( boost::asio::io_service& io_service,
-        tcp::resolver::iterator endpoint_iterator,
-        std::string nickname );
-
-private:
-};</code></pre>
-      </section>
-
-      <section data-transition="none">
-        <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
-{
-public:
-    posix_chat_client( boost::asio::io_service& io_service,
+    posix_chat_client(
+        boost::asio::io_service& io_service,
         tcp::resolver::iterator endpoint_iterator,
         std::string nickname );
 
 private:
-
-    void handle_connect( const boost::system::error_code& error );
 };</code></pre>
       </section>
 
       <section data-transition="none">
-        <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
+        <h3>asio client <span class="aside">header</span></h3>
+        <pre><code class="cpp">using boost::system::error_code;
+
+class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
-    posix_chat_client( boost::asio::io_service& io_service,
+    posix_chat_client(
+        boost::asio::io_service& io_service,
         tcp::resolver::iterator endpoint_iterator,
         std::string nickname );
 
 private:
 
-    void handle_connect( const boost::system::error_code& error );
+    void handle_connect( const error_code& ec );
+};</code></pre>
+      </section>
+
+      <section data-transition="none">
+        <h3>asio client <span class="aside">header</span></h3>
+        <pre><code class="cpp">using boost::system::error_code;
+
+class posix_chat_client // equiv to txchat.ChatClient
+{
+public:
+    posix_chat_client(
+        boost::asio::io_service& io_service,
+        tcp::resolver::iterator endpoint_iterator,
+        std::string nickname );
+
+private:
+
+    void handle_connect( const error_code& ec );
 
     void listen_on_socket();
-    void cb_read_socket( const boost::system::error_code& error, std::size_t bytes_recv );
-    void cb_write_socket( const boost::system::error_code& error, std::size_t length );
+    void cb_read_socket( const error_code& ec, std::size_t bytes_recv );
+    void cb_write_socket( const error_code& ec, std::size_t length );
 };</code></pre>
       </section>
 
       <section data-transition="none">
-        <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
+        <h3>asio client <span class="aside">header</span></h3>
+        <pre><code class="cpp">using boost::system::error_code;
+
+class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
-    posix_chat_client( boost::asio::io_service& io_service,
+    posix_chat_client(
+        boost::asio::io_service& io_service,
         tcp::resolver::iterator endpoint_iterator,
         std::string nickname );
 
 private:
 
-    void handle_connect( const boost::system::error_code& error );
+    void handle_connect( const error_code& ec );
 
     void listen_on_socket();
-    void cb_read_socket( const boost::system::error_code& error, std::size_t bytes_recv );
-    void cb_write_socket( const boost::system::error_code& error, std::size_t length );
+    void cb_read_socket( const error_code& ec, std::size_t bytes_recv );
+    void cb_write_socket( const error_code& ec, std::size_t length );
 
     void listen_on_input();
-    void cb_read_input( const boost::system::error_code& error, std::size_t length );
-    // ...
+    void cb_read_input( const error_code& ec, std::size_t length );
+
+    // member variables etc.
 };</code></pre>
       </section>
 
@@ -1210,14 +1254,15 @@ private:
     m_nickname = nickname;
 
     // attempt to connect to server, call handle_connect when we do
-    auto handler = boost::bind( &posix_chat_client::handle_connect, this, asio::placeholders::error );
+    auto handler = boost::bind( &posix_chat_client::handle_connect, this,
+                                asio::placeholders::error );
     asio::async_connect( m_socket, endpoint_iterator, handler );
 }</code></pre>
       </section>
 
       <section data-transition="none">
-        <h3>asio client - connect</h3>
-        <pre><code class="c++">void posix_chat_client::handle_connect( const boost::system::error_code& error )
+        <h3>asio client <span class="aside">connect</span></h3>
+        <pre><code class="c++">void posix_chat_client::handle_connect( const error_code& ec )
 {
     if( error )
     {
@@ -1235,25 +1280,32 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio client - listen</h3>
+        <h3>asio client <span class="aside">listen</span></h3>
         <pre><code class="c++">void posix_chat_client::listen_on_socket()
 {
     // read from socket
     auto buffer = asio::buffer( m_read_buffer, 1024 );
-    auto handler = boost::bind( &posix_chat_client::cb_read_socket, this, asio::placeholders::error, asio::placeholders::bytes_transferred );
+    auto handler = boost::bind( &posix_chat_client::cb_read_socket, this,
+                                asio::placeholders::error,
+                                asio::placeholders::bytes_transferred );
+
     m_socket.async_read_some( buffer, handler );
 }</code></pre>
         <pre class="fragment"><code class="c++">void posix_chat_client::listen_on_input()
 {
     // read from console until newline
-    auto handler = boost::bind( &posix_chat_client::cb_read_input, this, asio::placeholders::error, asio::placeholders::bytes_transferred );
+    auto handler = boost::bind( &posix_chat_client::cb_read_input, this,
+                                asio::placeholders::error,
+                                asio::placeholders::bytes_transferred );
+
     asio::async_read_until( m_stdin, m_input_buffer, '\n', handler );
 }</code></pre>
       </section>
 
       <section data-transition="none">
-        <h3>asio client - read callback</h3>
-        <pre><code class="c++">void posix_chat_client::cb_read_socket( const boost::system::error_code& error, std::size_t bytes_recv )
+        <h3>asio client <span class="aside">read callback</span></h3>
+        <pre><code class="c++">void posix_chat_client::cb_read_socket( const error_code& ec,
+                                        std::size_t bytes_recv )
 {
     if( error ) ; // handle it and return
 
@@ -1269,8 +1321,8 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio client - console callback</h3>
-        <pre><code class="c++">void posix_chat_client::cb_read_input( const boost::system::error_code& error, std::size_t length )
+        <h3>asio client <span class="aside">console callback</span></h3>
+        <pre><code class="c++">void posix_chat_client::cb_read_input( const error_code& ec, std::size_t length )
 {
     if( error ) ; // handle it and return
 
@@ -1283,8 +1335,8 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio client - write callback</h3>
-        <pre><code class="c++">void posix_chat_client::cb_write_socket( const boost::system::error_code& error, std::size_t length )
+        <h3>asio client <span class="aside">write callback</span></h3>
+        <pre><code class="c++">void posix_chat_client::cb_write_socket( const error_code& ec, std::size_t length )
 {
     if( error ) ; // handle it and return
     listen_on_input();
@@ -1313,6 +1365,11 @@ private:
     tcp::socket m_socket;
     // buffers, packer and unpacker
 };</code></pre>
+        <aside class="notes">
+           <p>The majority of the work happens in the <code>chat_session</code></p>
+           <p>But we need to see how we accept a connection first</p>
+           <p>Server is written in C++11 style</p>
+        </aside>
       </section>
 
       <section data-transition="none">
@@ -1334,7 +1391,9 @@ private:
     std::string     m_name;
 };</code></pre>
       </section>
+    </section>
 
+    <section>
       <section data-transition="none">
         <h3>asio server <span class="aside">acceptor</span></h3>
         <pre><code class="cpp">class chat_server
@@ -1351,26 +1410,14 @@ private:
     chat_room     m_room;
 };</code></pre>
       </section>
-    </section>
-
-    <section>
       <section data-transition="none">
-        <h3>asio server</h3>
-        <p>The majority of the work happens in the <code>chat_session</code></p>
-        <p>But we need to see how we accept a connection first</p>
-        <p>Server is written in C++11 style</p>
-      </section>
-    </section>
-
-    <section>
-      <section data-transition="none">
-        <h3>asio server</h3>
+        <h3>asio server <span class="aside">acceptor</span></h3>
         <pre><code class="cpp">// equiv to txchat.ChatFactory
 void chat_server::do_accept()
 {
     m_acceptor.async_accept( m_socket,
     // this is a C++11 lambda (aka anonymous function)
-    [this]( boost::system::error_code ec )
+    [this]( error_code ec )
     {
         if( ec )
         {
@@ -1387,9 +1434,11 @@ void chat_server::do_accept()
     } );
 }</code></pre>
       </section>
+    </section>
 
-      <section data-transition="none">
-        <h3>asio server</h3>
+    <section>
+      <section data-transition="none>"
+        <h3>asio server <span class="aside">session</span></h3>
         <pre><code class="cpp">void chat_session::start()
 {
     m_room.join( shared_from_this() );
@@ -1405,7 +1454,7 @@ void chat_server::do_accept()
     auto buffer = boost::asio::buffer( m_read_buff.data(), 1024 ),
 
     m_socket.async_read_some( buffer,
-    [this, self]( boost::system::error_code ec, std::size_t length )
+    [this, self]( error_code ec, std::size_t length )
     {
         if( ec ) ; // handle it and exit, breaking the listen chain
 
@@ -1432,7 +1481,7 @@ void chat_server::do_accept()
     auto buffer = boost::asio::buffer( m_packer.data(), m_packer.size() );
 
     boost::asio::async_write( m_socket, buffer,
-    [this, self]( boost::system::error_code ec, std::size_t length )
+    [this, self]( error_code ec, std::size_t length )
     {
         if( ec ) ; // handle it and close
         // log and increment counters
@@ -1444,7 +1493,7 @@ void chat_server::do_accept()
         <h3>asio server <span class="aside">close &amp; cleanup</span></h3>
         <pre><code class="cpp">void chat_session::close()
 {
-    boost::system::error_code ec;
+    error_code ec;
     m_socket.cancel(ec);
 
     // this is why we have the goofy creation order
