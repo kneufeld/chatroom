@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   height="80"
+   width="80"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="crossbar.svg"
+   inkscape:export-filename="C:\Users\AG\scm\wwwcrossbar\design\crossbar_icon_and_text.png"
+   inkscape:export-xdpi="49.5"
+   inkscape:export-ydpi="49.5">
+  <defs
+     id="defs11" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1488"
+     inkscape:window-height="1438"
+     id="namedview9"
+     showgrid="false"
+     inkscape:zoom="2.085965"
+     inkscape:cx="230.60089"
+     inkscape:cy="82.270673"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <sodipodi:guide
+       orientation="0,1"
+       position="186.10169,16.949153"
+       id="guide2992" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="461.69492,109.83051"
+       id="guide2994" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="79.999996,122.37288"
+       id="guide3007" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="100.33898,16.610169"
+       id="guide3009" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="194.57627,-38.983051"
+       id="guide3011" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="228.13559,-86.101695"
+       id="guide3013" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     style="fill:#ffde00;fill-opacity:1"
+     inkscape:connector-curvature="0"
+     d="M 9.999925e-4,0 80,0 80,80 9.999925e-4,80 z"
+     id="rect3842-15-6-1" />
+  <path
+     inkscape:connector-curvature="0"
+     d="m 9.999925e-4,16.95 0,8 18.8537640075,-0.05725 12.551844,12.552 5.780927,-5.781 -14.843814,-14.844 z"
+     style="text-indent:0;text-align:start;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#000000;fill:#1a1a1a;fill-opacity:1;enable-background:accumulate"
+     id="path3902" />
+  <path
+     inkscape:connector-curvature="0"
+     d="m 48.515394,43 -5.780928,5.781 14.348821,14.349 22.916213,0 0,-8.021 -19.374758,0 z"
+     style="text-indent:0;text-align:start;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#000000;fill:#1a1a1a;fill-opacity:1;enable-background:accumulate"
+     id="path5387-7-4-4-2-1-6" />
+  <path
+     inkscape:connector-curvature="0"
+     d="M 57.655279,16.85 19.484757,55.1975 0,55.1975 l 0,8 22.844215,0 38.300521,-38.2745 18.853764,0 0,-8.073 z"
+     style="text-indent:0;text-align:start;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#000000;fill:#1a1a1a;fill-opacity:1;enable-background:accumulate"
+     id="path5387-7-4-4-5-7-4-8" />
+</svg>
