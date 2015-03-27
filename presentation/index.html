@@ -110,10 +110,20 @@ pre > code
     <section style="background-image: url(images/mike-transparent.svg); background-repeat: no-repeat; background-size: 300px; background-position: top right;">
       <!-- <img src="images/mike-transparent.svg" style="background: rgba(0, 0, 0, 0.0); width: 40%; height: auto; border: none; margin-left: 1em; float:right;" /> -->
       <!-- <object type="image/svg+xml" data="images/mike-transparent.svg" style="background: rgba(0, 0, 0, 0.0); width: 40%; height: auto; border: none; margin-left: 1em; float:right;"></object> -->
-      <div style="float:left; max-width: 45%;">
       <h2>Twisted <span class="small">via Python</span></h2>
       <p>Mike Warren</p>
       <p><a href="https://@meejah.ca">https://<span style="font-size: 150%; text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); text-decoration: underline; -moz-text-decoration-color: rgba(255, 64, 64, 0.5);">@meejah</span>.ca</a></p>
+
+      <div style="width: 1024px; margin-top: 150px;">
+        <p class="fragment" style="opacity: 0.7; float: left;">
+          <img src="images/txtorcon-logo.svg" style="box-shadow: none; border: none; background: none !important;" width="250" height="250" /><br />
+          txtorcon.rtfd.org
+        </p>
+
+        <p class="fragment" style="opacity: 0.7; float: left; margin-left: 4em;">
+          <img src="images/crossbar.svg" style="padding-top: 25px; padding-bottom: 25px; box-shadow: none; border: none; background: none !important;" width="200" height="200" /><br />
+          crossbar.io
+        </p>
       </div>
     </section>
 
@@ -128,7 +138,7 @@ pre > code
       <h2>Talk Outline</h2>
       <ul>
         <li class="fragment">Event-Based Programming Overview</li>
-        <li class="fragment">example: chat server</li>
+        <li class="fragment">Demo chat server</li>
         <li class="fragment">Programming with Twisted</li>
         <li class="fragment">Programming with boost::asio</li>
       </ul>
@@ -188,21 +198,6 @@ read(fd, callback);
 </code></pre></dd>
         </dl>
     </section>
-<!--
-    <section>
-      <h2>Definitions...</h2>
-        <dl class="fragment">
-          <dt><a href="http://en.wikipedia.org/wiki/Reactor_pattern">reactor</a></dt>
-          <dd>(pattern) waits for events and then calls handler to perform
-          actual read or write</dd>
-        </dl>
-        <dl class="fragment">
-          <dt><a href="http://en.wikipedia.org/wiki/Proactor_pattern">proactor</a></dt>
-          <dd>(pattern) waits for events and performs the read or write,
-          passing any accociated data to the handler. asynchronous variant of reactor</dd>
-        </dl>
-    </section>
--->
 
     <section data-transition="none">
       <h2>Threaded I/O</h2>
@@ -241,8 +236,8 @@ read(fd, callback);
         <li class="fragment">&ldquo;event&rdquo; &rarr; run code</li>
         <li class="fragment">event: timer, data received, data sent<br/><span class="aside">(network, user, disk, etc.)</span></li>
         <li class="fragment">code: &ldquo;callback&rdquo; <span class="aside">errback</span></li>
-        <li class="fragment">Pattern: Reactor or Proactor</li>
         <li class="fragment">unit-test callbacks, errbacks</li>
+        <li class="fragment">Pattern: Reactor or Proactor</li>
 
 <!--        <li class="fragment">Twisted: reactor</li>
         <li class="fragment">ASIO: both</li> -->
@@ -284,10 +279,10 @@ read(fd, callback);
 -->
 
     <section>
-      <h2>example: chat server <span class="aside">&amp; client</span></h2>
+      <h2>demo chat server <span class="aside">&amp; client</span></h2>
       <ul>
         <li class="fragment">msgpack encoding <span class="aside">(and framing)</span></li>
-        <li class="fragment">list-of-strings: <code class="python" style="font-size: 80% !important;">['nickname', 'insightful message']</code></li>
+        <li class="fragment">list-of-strings: <code class="lang-python" style="font-size: 80% !important;">['nickname', 'insightful message']</code></li>
         <li class="fragment"><span class="caps">tcp</span> 10001</li>
         <li class="fragment"><tt>thula.meejah.ca:10001</tt></li>
       </ul>
@@ -331,7 +326,7 @@ read(fd, callback);
     </section>
 -->
     <section data-transition="none">
-      <h2>twisted</h2>
+      <h2>twisted infographic</h2>
       <img src="images/twisted-class-diagram.svg" style="padding: 0.5em; width: 1000px; border: none;">
     </section>
 
@@ -612,19 +607,14 @@ def main(reactor):
         <section data-transition="none">
           <h2>server protocol</h2>
               <pre><code class="lang-python">
+class ChatFactory(Factory):
+    def buildProtocol(self, addr):
+        return ChatServer()
+
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
-    endpoint.listen(Factory.forProtocol(ChatServer))
-    return Deferred()
-              </code></pre>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">
-def main(reactor):
-    endpoint = TCP4ServerEndpoint(reactor, 10001)
-    endpoint.listen(Factory.forProtocol(ChatServer))
-    return Deferred()
+    endpoint.listen(ChatFactory())
+    return Deferred()  # loop forever
 
 react(main)  # from twisted.internet.task
               </code></pre>
@@ -800,20 +790,29 @@ react(main)  # from twisted.internet.task
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
         </code></pre>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
+        </code></pre>
+      </section>
+      <section data-transition="none">
+        <h2>user input</h2>
+        <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
         </code></pre>
       </section>
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         </code></pre>
@@ -821,7 +820,8 @@ class StandardInput(LineReceiver):
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         return self.protocol.sendMessage(self.nick, line)
@@ -831,7 +831,8 @@ class StandardInput(LineReceiver):
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         return self.protocol.sendMessage(self.nick, line)
@@ -842,7 +843,8 @@ class StandardInput(LineReceiver):
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         return self.protocol.sendMessage(self.nick, line)
@@ -855,7 +857,8 @@ class StandardInput(LineReceiver):
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         return self.protocol.sendMessage(self.nick, line)
@@ -870,7 +873,8 @@ class StandardInput(LineReceiver):
       <section data-transition="none">
         <h2>user input</h2>
         <pre><code class="lang-python">from twisted.protocols.basic import LineReceiver
-class StandardInput(LineReceiver):
+from twisted.internet.stdio import StandardIO
+class StandardInput(LineReceiver, StandardIO):
     delimiter = os.linesep
     def lineReceived(self, line):
         return self.protocol.sendMessage(self.nick, line)
@@ -888,33 +892,19 @@ class StandardInput(LineReceiver):
     <section>
       <section data-transition="none">
         <h2>Testing!</h2>
-        <pre><code class="lang-python">import pytest
+        <pre><code class="lang-python">from twisted.test import proto_helpers
         </code></pre>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
-        <pre><code class="lang-python">import pytest
-from twisted.test import proto_helpers
+        <pre><code class="lang-python">from twisted.test import proto_helpers
+import pytest
         </code></pre>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
-        <pre><code class="lang-python">import pytest
-from twisted.test import proto_helpers
-
-@pytest.fixture(scope='function')
-def factory():
-    return ChatFactory()
-        </code></pre>
-      </section>
-      <section data-transition="none">
-        <h2>Testing!</h2>
-        <pre><code class="lang-python">import pytest
-from twisted.test import proto_helpers
-
-@pytest.fixture(scope='function')
-def factory():
-    return ChatFactory()
+        <pre><code class="lang-python">from twisted.test import proto_helpers
+import pytest
 
 @pytest.fixture(scope='function')
 def proto(factory):
@@ -922,26 +912,21 @@ def proto(factory):
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
-        <pre><code class="lang-python">import pytest
-from twisted.test import proto_helpers
-
-@pytest.fixture(scope='function')
-def factory():
-    return ChatFactory()
+        <pre><code class="lang-python">from twisted.test import proto_helpers
+import pytest
 
 @pytest.fixture(scope='function')
 def proto(factory):
     transport = proto_helpers.StringTransportWithDisconnection()
         </code></pre>
+      <aside class="notes">
+        Only important thing: test-controlled TRANSPORT!!
+      </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
-        <pre><code class="lang-python">import pytest
-from twisted.test import proto_helpers
-
-@pytest.fixture(scope='function')
-def factory():
-    return ChatFactory()
+        <pre><code class="lang-python">from twisted.test import proto_helpers
+import pytest
 
 @pytest.fixture(scope='function')
 def proto(factory):
@@ -1046,6 +1031,9 @@ def proto(factory):
     assert proto.transport.value() == ''
     proto.dataReceived(data[5:])
         </code></pre>
+      <aside class="notes">
+        state-machine walking!
+      </aside>
       </section>
       <section data-transition="none">
         <h2>Testing!</h2>
@@ -1082,17 +1070,6 @@ test/test_server.py .....
       </section>
     </section>
 
-    <section>
-      <section data-transition="none">
-        <h2>Command-Line</h2>
-      <ul>
-        <li class="fragment">Click: <a href="http://http://click.pocoo.org">click.pocoo.org</a></li>
-        <li class="fragment"><code class="nohighlight">txchat client --nick meejah</code></li>
-        <li class="fragment"><code class="nohighlight">thula.meejah.ca:10001</code></li>
-      </ul>
-      </section>
-    </section>
-
     <section data-state="moon">
       <h2>boost::asio</h2>
       <div style="text-align: left">
@@ -1115,31 +1092,30 @@ test/test_server.py .....
       <img src="images/tcp_start.png" height=500/>
     </section>
 
-    <section id="cpp_client_code">
-
-      <section data-transition="none">
-        <h3>asio client - msgpack object</h3>
-        <pre><code class="cpp">class chat_message
+    <section data-transition="none">
+      <h3>asio client <span class="aside">msgpack object</span></h3>
+      <pre><code class="cpp">class chat_message
 {
 public:
 
-    std::string nickname;
-    std::string message;
+  std::string nickname;
+  std::string message;
 
-    MSGPACK_DEFINE( nickname, message );
+  MSGPACK_DEFINE( nickname, message );
 };</code></pre>
-      </section>
+    </section>
 
+    <section id="cpp_client_code">
       <section data-transition="none">
         <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client
+        <pre><code class="lang-cpp">class posix_chat_client // equiv to txchat.ChatClient
 {
 };</code></pre>
       </section>
 
       <section data-transition="none">
         <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client
+        <pre><code class="lang-cpp">class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
     posix_chat_client( boost::asio::io_service& io_service,
@@ -1150,7 +1126,7 @@ public:
 
       <section data-transition="none">
         <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client
+        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
     posix_chat_client( boost::asio::io_service& io_service,
@@ -1163,7 +1139,7 @@ private:
 
       <section data-transition="none">
         <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client
+        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
     posix_chat_client( boost::asio::io_service& io_service,
@@ -1178,7 +1154,7 @@ private:
 
       <section data-transition="none">
         <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client
+        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
     posix_chat_client( boost::asio::io_service& io_service,
@@ -1197,7 +1173,7 @@ private:
 
       <section data-transition="none">
         <h3>asio client</h3>
-        <pre><code class="cpp">class posix_chat_client
+        <pre><code class="cpp">class posix_chat_client // equiv to txchat.ChatClient
 {
 public:
     posix_chat_client( boost::asio::io_service& io_service,
@@ -1222,7 +1198,7 @@ private:
 
     <section>
       <section data-transition="none">
-        <h3>asio client</h3>
+        <h3>asio client <span class="aside">constructor</span></h3>
         <pre><code class="c++">posix_chat_client::posix_chat_client( asio::io_service& io_service,
                                       tcp::resolver::iterator endpoint_iterator,
                                       std::string nickname )
@@ -1314,12 +1290,11 @@ private:
     listen_on_input();
 }</code></pre>
       </section>
-
     </section><!-- cpp_client_code -->
 
     <section id="cpp_server_code">
       <section data-transition="none">
-        <h3>asio server - session</h3>
+        <h3>asio server <span class="aside">session</span></h3>
         <pre><code class="cpp">// this is the connection to the client
 class chat_session : public std::enable_shared_from_this&lt;chat_session>
 {
@@ -1341,8 +1316,8 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio server - session manager</h3>
-        <pre><code class="cpp">// this is the list of clients
+        <h3>asio server <span class="aside">session manager</span></h3>
+        <pre><code class="cpp">// equiv to "global txchat.clients"
 class chat_room
 {
 public:
@@ -1361,9 +1336,8 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio server - acceptor</h3>
-        <pre><code class="cpp">// this holds the acceptor
-class chat_server
+        <h3>asio server <span class="aside">acceptor</span></h3>
+        <pre><code class="cpp">class chat_server
 {
 public:
     chat_server( boost::asio::io_service& io_service,
@@ -1377,17 +1351,22 @@ private:
     chat_room     m_room;
 };</code></pre>
       </section>
+    </section>
 
+    <section>
       <section data-transition="none">
         <h3>asio server</h3>
         <p>The majority of the work happens in the <code>chat_session</code></p>
         <p>But we need to see how we accept a connection first</p>
         <p>Server is written in C++11 style</p>
       </section>
+    </section>
 
+    <section>
       <section data-transition="none">
         <h3>asio server</h3>
-        <pre><code class="cpp">void chat_server::do_accept()
+        <pre><code class="cpp">// equiv to txchat.ChatFactory
+void chat_server::do_accept()
 {
     m_acceptor.async_accept( m_socket,
     // this is a C++11 lambda (aka anonymous function)
@@ -1419,7 +1398,7 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio server - read from socket</h3>
+        <h3>asio server <span class="aside">read from socket</span></h3>
         <pre><code class="cpp">void chat_session::do_read()
 {
     auto self( shared_from_this() );
@@ -1444,7 +1423,7 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio server - write to socket</h3>
+        <h3>asio server <span class="aside">write to socket</span></h3>
         <pre><code class="cpp">void chat_session::do_write()
 {
     msgpack::pack( m_packer, m_msg ); // pack our msg
@@ -1462,7 +1441,7 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio server - close & cleanup</h3>
+        <h3>asio server <span class="aside">close &amp; cleanup</span></h3>
         <pre><code class="cpp">void chat_session::close()
 {
     boost::system::error_code ec;
@@ -1476,7 +1455,7 @@ private:
       </section>
 
       <section data-transition="none">
-        <h3>asio server - close & cleanup</h3>
+        <h3>asio server <span class="aside">main</span></h3>
         <pre><code class="cpp">int main( int argc, char** argv )
 {
     // parse command line with boost::program_options
@@ -1533,11 +1512,11 @@ private:
             <td>21 bytes</td>
           </tr>
           <tr class="fragment" data-fragment-index=2>
-            <td>total msg recv</td>
-            <td>638,316</td>
+            <td>total msg sent</td>
+            <td>638,316 <span class="aside">x15 ≈ 9M</span></td>
           </tr>
           <tr class="fragment" data-fragment-index=2>
-            <td>total msg sent</td>
+            <td>total msg recv</td>
             <td>8,935,859</td>
           </tr>
           <tr class="fragment" data-fragment-index=3>
@@ -1549,6 +1528,27 @@ private:
       <p class="fragment" data-fragment-index=4>zero optimizations</p>
       <p class="fragment" data-fragment-index=5>running in debug mode</p>
     </section>
+
+    <section>
+      <section data-transition="none">
+        <h2>Demo</h2>
+      <ul>
+        <li>Twisted server: <code class="nohighlight">thula.meejah.ca:10001</code></li>
+        <li>C++ server: <code class="nohighlight">thula.meejah.ca:20002</code></li>
+      </ul>
+
+      <pre><code class="nohighlight"># Twisted client
+$ txchat client --nick meejah
+$ txchat client --nick meejah --endpoint tcp:thula.meejah.ca:20002
+
+# C++ client
+$ client kurt thula.meejah.ca 20002
+$ client kurt thula.meejah.ca 10001
+</code></li>
+      </section>
+    </section>
+
+
 
     <section style="text-align: left;">
       <h1>THE END</h1>
@@ -1593,7 +1593,7 @@ slideNumber: true,
 
 width: 1024,
 height: 768,
-//fragments: false,
+fragments: false,
 
 transition: 'slide', // none/fade/slide/convex/concave/zoom
 
