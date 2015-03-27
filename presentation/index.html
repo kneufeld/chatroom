@@ -48,8 +48,8 @@ dl dd { text-align: left; }
 
 img {
   background-color: white !important;
-text-shadow: none;
-border: none;
+  text-shadow: none;
+  border: none;
 }
 
 section
@@ -64,6 +64,11 @@ section
 
 .smallcaps, .caps {
   font-variant:small-caps !important;
+}
+
+.reveal pre {
+  box-shadow: none;
+  width: 100%;
 }
 
 tt, code, pre {
@@ -81,12 +86,13 @@ tt {
 
 code
 {
-  font-size: 120% !important;
+  /* font-size: 100% !important; */
 }
 
 pre > code
 {
-  background: #002b36 !important;
+  /* background: #002b36 !important; */
+  max-height: none !important;
 }
 
 .aside
