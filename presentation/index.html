@@ -1475,6 +1475,34 @@ private:
 }</code></pre>
       </section>
 
+      <section data-transition="none">
+        <h3>asio server - close & cleanup</h3>
+        <pre><code class="cpp">int main( int argc, char** argv )
+{
+    // parse command line with boost::program_options
+    // setup signal handler to catch ctrl-c
+
+    try
+    {
+        boost::asio::io_service ios;
+
+        for( auto port : opts["ports"].as< std::vector&lt;unsigned> >() )
+        {
+            tcp::endpoint endpoint( tcp::v4(), port );
+            servers.emplace_back( ios, endpoint );
+        }
+
+        ios.run();
+    }
+    catch( std::exception& e )
+    {
+        cerr << "there was a catastrophic failure: " << e.what() << endl;
+        return 1;
+    }
+
+    return 0;
+}</code></pre>
+      </section>
     </section><!-- cpp_server_code -->
 
     <section>
