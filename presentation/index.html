@@ -1492,7 +1492,7 @@ private:
             servers.emplace_back( ios, endpoint );
         }
 
-        ios.run();
+        ios.run(); // this blocks "forever"
     }
     catch( std::exception& e )
     {
