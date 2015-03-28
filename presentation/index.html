@@ -531,9 +531,9 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
-                self.got_message(msg)
+                self.gotMessage(msg)
 
-        def got_message(self, msg):
+        def gotMessage(self, msg):
             pass
           </code></pre>
         <aside class="notes">
@@ -546,9 +546,9 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
-                self.got_message(msg)
+                self.gotMessage(msg)
 
-        def got_message(self, msg):
+        def gotMessage(self, msg):
             packed = msgpack.packb(msg)
           </code></pre>
         <aside class="notes">
@@ -561,9 +561,9 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
-                self.got_message(msg)
+                self.gotMessage(msg)
 
-        def got_message(self, msg):
+        def gotMessage(self, msg):
             packed = msgpack.packb(msg)
             global clients
           </code></pre>
@@ -577,9 +577,9 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
-                self.got_message(msg)
+                self.gotMessage(msg)
 
-        def got_message(self, msg):
+        def gotMessage(self, msg):
             packed = msgpack.packb(msg)
             global clients
             for proto in clients:
@@ -594,31 +594,11 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
-                self.got_message(msg)
+                self.gotMessage(msg)
 
-        def got_message(self, msg):
+        def gotMessage(self, msg):
             packed = msgpack.packb(msg)
             global clients
-            for proto in clients:
-                proto.transport.write(packed)
-          </code></pre>
-        <aside class="notes">
-        </aside>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatSession(Protocol):
-        def __init__(self):
-            self.decoder = msgpack.Unpacker()
-
-        def dataReceived(self, data):
-            self.decoder.feed(data)
-            for msg in self.decoder:
-                self.got_message(msg)
-
-        def got_message(self, msg):
-            global clients
-            packed = msgpack.packb(msg)
             for proto in clients:
                 proto.transport.write(packed)
           </code></pre>
@@ -634,9 +614,29 @@ read(fd, callback);
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
-                self.got_message(msg)
+                self.gotMessage(msg)
 
-        def got_message(self, msg):
+        def gotMessage(self, msg):
+            global clients
+            packed = msgpack.packb(msg)
+            for proto in clients:
+                proto.transport.write(packed)
+          </code></pre>
+        <aside class="notes">
+        </aside>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
+
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:
+               self.gotMessage(msg)
+
+        def gotMessage(self, msg):
             global clients
             packed = msgpack.packb(msg)
             for proto in clients:
@@ -1854,25 +1854,24 @@ $ client kurt polyglot.burgundywall.com 10001
     </section>
 
     <section style="text-align: center" id="link_slide">
-      <h3>presentation online at</h3>
-      <h3 style="margin-bottom: 2em">
-        <a href="http://polyglot.burgundywall.com">http://polyglot.burgundywall.com</a>
-      </h3>
-      <h3>code available at</h3>
+      <h3>presentation</h3>
+      <h3><a href="http://polyglot.burgundywall.com">http://polyglot.burgundywall.com</a></h3>
+
+      <h4>C++ code</h4>
       <h3>
         <a href="https://github.com/kneufeld/chatroom">https://github.com/kneufeld/chatroom</a>
       </h3>
-<!--
-      <p class="fragment">
+
+      <h4>twisted code</h4>
+      <p>
         install txchat:
-        <pre><code>
+        <pre><code class="nohighlight">
 virtualenv poly
 source ./poly/bin/activate
 pip install https://meejah.ca/poly/txchat-1.0.0.tar.gz
 txchat --help
         </code></pre>
       </p>
--->
       <aside class="notes">
       </aside>
     </section>
