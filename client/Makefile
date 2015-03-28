@@ -64,8 +64,8 @@ THREADING =
 SHELL = /bin/sh
 
 ## Commands to generate dependency files
-GEN_DEPS.c=		$(CC) -M -xc $(DEFS) $(CPPFLAGS)
-GEN_DEPS.cc=	$(CXX) -M -xc++ $(DEFS) $(CPPFLAGS)
+GEN_DEPS.c=		$(CC) -M -xc $(DEFS) $(CPPFLAGS) -std=c++11
+GEN_DEPS.cc=	$(CXX) -M -xc++ $(DEFS) $(CPPFLAGS) -std=c++11
 
 ## Commands to compile
 COMPILE.c=	$(CC) -fPIC $(THREADING) $(DEFS) $(CPPFLAGS) $(CFLAGS) -c
