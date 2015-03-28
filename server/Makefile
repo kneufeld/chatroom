@@ -24,15 +24,17 @@ OBJECTS=$(patsubst %.cpp,%.o,$(wildcard *.cpp))
 ## INC_DIR include these other directories when looking for header files
 OBJ_DIR=.obj
 SRC_DIR=.
-INC_DIR=-I../include -I/usr/local/opt/cppunit/include -I/usr/local/opt/boost/include -I/usr/local/opt/msgpack/include
+INC_DIR=-I../include
+#-I/usr/include/boost/compatibility/cpp_c_headers
 
 ## DEFINES pass in these extra #defines to gcc (no -D required)
 DEFINES=-DBOOST_ALL_DYN_LINK
 
 LDFLAGS = -L/usr/local/opt/cppunit/lib -L/usr/local/opt/boost/lib
 _LIBS = -lboost_system -lboost_program_options -lboost_thread -lboost_log_setup -lboost_log -lboost_program_options -lboost_filesystem
-LIBS=$(addsuffix -mt,$(_LIBS))
-LIBS += -lmsgpack
+#LIBS=$(addsuffix -mt,$(_LIBS))
+LIBS=$(_LIBS)
+LIBS += -lmsgpack -lpthread
 
 ## Run make command in these directories
 SUBDIRS =
@@ -47,13 +49,16 @@ CPPFLAGS = -I$(SRC_DIR) $(INC_DIR)
 #-std=c++11
 CFLAGS = $(DEBUG) $(OPTIMIZE) 
 CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11
-CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11 -stdlib=libc++
+CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11
+#-stdlib=libc++
 
 ## Compiler/tools information
 CC = /usr/local/opt/gcc/bin/gcc-4.9
 CXX = /usr/local/opt/gcc/bin/g++-4.9
 CC = clang
 CXX = clang++
+CC = gcc
+CXX = g++
 THREADING =
 
 ### YOU PROBABLY DON'T NEED TO CHANGE ANYTHING BELOW HERE ###

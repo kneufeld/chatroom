@@ -31,8 +31,8 @@ DEFINES=-DBOOST_ALL_DYN_LINK
 
 LDFLAGS = -L/usr/local/opt/cppunit/lib -L/usr/local/opt/boost/lib
 _LIBS = -lboost_system -lboost_program_options -lboost_thread -lboost_log_setup -lboost_log -lboost_program_options -lboost_filesystem
-LIBS=$(addsuffix -mt,$(_LIBS))
-#LIBS=$(_LIBS) -lpthread
+#LIBS=$(addsuffix -mt,$(_LIBS))
+LIBS=$(_LIBS) -lpthread
 LIBS += -lmsgpack
 
 ## Run make command in these directories
@@ -47,17 +47,14 @@ DEFS=$(DEFINES)
 CPPFLAGS = -I$(SRC_DIR) $(INC_DIR)
 #-std=c++11
 CFLAGS = $(DEBUG) $(OPTIMIZE)
-CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++0x
 CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11
 #-stdlib=libc++
 
 ## Compiler/tools information
 CC = /usr/local/opt/gcc/bin/gcc-4.9
 CXX = /usr/local/opt/gcc/bin/g++-4.9
-#CC = gcc
-#CXX = g++
-CC = clang
-CXX = clang++
+CC = gcc
+CXX = g++
 THREADING =
 
 ### YOU PROBABLY DON'T NEED TO CHANGE ANYTHING BELOW HERE ###
