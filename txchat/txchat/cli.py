@@ -47,8 +47,7 @@ def chat():
 
 
 @chat.command()
-#@click.option('--endpoint', '-e', default='tcp:thula.meejah.ca:10001', help='Twisted endpoint to connect to')
-@click.option('--endpoint', '-e', default='tcp:127.0.0.1:10001', help='Twisted endpoint to connect to')
+@click.option('--endpoint', '-e', default='tcp:thula.meejah.ca:10001', help='Twisted endpoint to connect to')
 @click.option('--nick', '-n', default=None, help='Nickname to use', required=True)
 def client(endpoint, nick):
     '''
