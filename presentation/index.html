@@ -1791,18 +1791,22 @@ void chat_server::do_accept()
     <section>
       <section data-transition="none">
         <h2>Demo</h2>
-      <ul>
-        <li>Twisted server: <code class="nohighlight">thula.meejah.ca:10001</code></li>
-        <li>C++ server: <code class="nohighlight">thula.meejah.ca:20002</code></li>
-      </ul>
+        <dl>
+          <dt>Twisted server</dt>
+          <dd><code class="nohighlight">thula.meejah.ca:10001</code></dd>
+        </dl>
+        <dl>
+          <dt>C++ server</dt>
+          <dd><code class="nohighlight">polyglot.burgundywall.com:10001</code></dd>
+        </dl>
 
       <pre><code class="nohighlight"># Twisted client
 $ txchat client --nick meejah
-$ txchat client --nick meejah --endpoint tcp:thula.meejah.ca:20002
+$ txchat client --nick meejah --endpoint tcp:polyglot.burgundywall.com:10001
 
 # C++ client
-$ client kurt thula.meejah.ca 20002
 $ client kurt thula.meejah.ca 10001
+$ client kurt polyglot.burgundywall.com 10001
 </code></li>
         <aside class="notes">
         </aside>
