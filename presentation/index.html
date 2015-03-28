@@ -214,32 +214,36 @@ read(fd, callback);
         </aside>
     </section>
 
-    <section data-transition="none">
-      <h2>Threaded I/O</h2>
-      <img src="images/threaded-io.svg" style="padding: 0.5em; height: 600px; border: none;">
-        <aside class="notes">
-        </aside>
+    <section>
+        <section data-transition="none">
+          <h2>Threaded I/O</h2>
+          <img src="images/threaded-io.svg" style="padding: 0.5em; height: 600px; border: none;">
+            <aside class="notes">
+            </aside>
+        </section>
+
+        <section data-transition="none">
+          <h2>Threaded I/O</h2>
+          <img src="images/threaded-io-contextswitches.svg" style="padding: 0.5em; height: 600px; border: none;">
+            <aside class="notes">
+            </aside>
+        </section>
     </section>
 
-    <section data-transition="none">
-      <h2>Threaded I/O</h2>
-      <img src="images/threaded-io-contextswitches.svg" style="padding: 0.5em; height: 600px; border: none;">
-        <aside class="notes">
-        </aside>
-    </section>
+    <section>
+        <section data-transition="none">
+          <h2>Event-based I/O</h2>
+          <img src="images/event-based-io.svg" style="padding: 0.5em; height: 600px; border: none;">
+            <aside class="notes">
+            </aside>
+        </section>
 
-    <section data-transition="none">
-      <h2>Event-based I/O</h2>
-      <img src="images/event-based-io.svg" style="padding: 0.5em; height: 600px; border: none;">
-        <aside class="notes">
-        </aside>
-    </section>
-
-    <section data-transition="none">
-      <h2>Event-based I/O</h2>
-      <img src="images/event-based-io-arrows.svg" style="padding: 0.5em; height: 600px; border: none;">
-        <aside class="notes">
-        </aside>
+        <section data-transition="none">
+          <h2>Event-based I/O</h2>
+          <img src="images/event-based-io-arrows.svg" style="padding: 0.5em; height: 600px; border: none;">
+            <aside class="notes">
+            </aside>
+        </section>
     </section>
 
     <section>
@@ -374,7 +378,7 @@ read(fd, callback);
     <section> <!-- dep. injection -->
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre class="fragment"><code class="lang-python">class ChatServer(Protocol):</code></pre>
+              <pre class="fragment"><code class="lang-python">class ChatSession(Protocol):</code></pre>
               <pre class="fragment"><code class="lang-python">    def connectionMade(self):
             pass</code></pre>
               <pre class="fragment"><code class="lang-python">    def connectionLost(self, reason):
@@ -386,7 +390,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
 
@@ -404,7 +408,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
 
@@ -422,7 +426,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
 
@@ -441,7 +445,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
 
@@ -461,7 +465,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         # ...
         def dataReceived(self, data):
             pass
@@ -471,7 +475,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
@@ -481,7 +485,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
@@ -492,7 +496,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
@@ -506,7 +510,7 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         # ...
         def dataReceived(self, data):
             self.decoder.feed(data)
@@ -518,116 +522,121 @@ read(fd, callback);
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        # ...
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:
+                self.got_message(msg)
+
         def got_message(self, msg):
             pass
+          </code></pre>
+        <aside class="notes">
+        </aside>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        # ...
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:
+                self.got_message(msg)
+
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+          </code></pre>
+        <aside class="notes">
+        </aside>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        # ...
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:
+                self.got_message(msg)
+
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+            global clients
+          </code></pre>
+        <aside class="notes">
+        </aside>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        # ...
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:
+                self.got_message(msg)
+
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+            global clients
+            for proto in clients:
+          </code></pre>
+        <aside class="notes">
+        </aside>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        # ...
+        def dataReceived(self, data):
+            self.decoder.feed(data)
+            for msg in self.decoder:
+                self.got_message(msg)
+
+        def got_message(self, msg):
+            packed = msgpack.packb(msg)
+            global clients
+            for proto in clients:
+                proto.transport.write(packed)
+          </code></pre>
+        <aside class="notes">
+        </aside>
+        </section>
+        <section data-transition="none">
+          <h2>server protocol</h2>
+              <pre><code class="lang-python">class ChatSession(Protocol):
+        def __init__(self):
+            self.decoder = msgpack.Unpacker()
 
         def dataReceived(self, data):
             self.decoder.feed(data)
             for msg in self.decoder:
                 self.got_message(msg)
-          </code></pre>
-        <aside class="notes">
-        </aside>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
-        def got_message(self, msg):
-            packed = msgpack.packb(msg)
 
-        def dataReceived(self, data):
-            self.decoder.feed(data)
-            for msg in self.decoder.next():
-                self.got_message(msg)
-          </code></pre>
-        <aside class="notes">
-        </aside>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
         def got_message(self, msg):
-            packed = msgpack.packb(msg)
             global clients
-
-        def dataReceived(self, data):
-            self.decoder.feed(data)
-            for msg in self.decoder.next():
-                self.got_message(msg)
-          </code></pre>
-        <aside class="notes">
-        </aside>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
-        def got_message(self, msg):
             packed = msgpack.packb(msg)
-            global clients
-            for proto in clients:
-
-        def dataReceived(self, data):
-            self.decoder.feed(data)
-            for msg in self.decoder.next():
-                self.got_message(msg)
-          </code></pre>
-        <aside class="notes">
-        </aside>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
-        def got_message(self, msg):
-            packed = msgpack.packb(msg)
-            global clients
             for proto in clients:
                 proto.transport.write(packed)
-
-        def dataReceived(self, data):
-            self.decoder.feed(data)
-            for msg in self.decoder.next():
-                self.got_message(msg)
           </code></pre>
         <aside class="notes">
         </aside>
         </section>
         <section data-transition="none">
           <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
+              <pre><code class="lang-python">class ChatSession(Protocol):
         def __init__(self):
             self.decoder = msgpack.Unpacker()
 
-        def got_message(self, msg):
-            global clients
-            packed = msgpack.packb(msg)
-            for proto in clients:
-                proto.transport.write(packed)
-
         def dataReceived(self, data):
             self.decoder.feed(data)
-            for msg in self.decoder.next():
+            for msg in self.decoder:
                 self.got_message(msg)
-          </code></pre>
-        <aside class="notes">
-        </aside>
-        </section>
-        <section data-transition="none">
-          <h2>server protocol</h2>
-              <pre><code class="lang-python">class ChatServer(Protocol):
-        def __init__(self):
-            self.decoder = msgpack.Unpacker()
 
         def got_message(self, msg):
             global clients
             packed = msgpack.packb(msg)
             for proto in clients:
                 proto.transport.write(packed)
-
-        def dataReceived(self, data):
-            self.decoder.feed(data)
-            for msg in self.decoder.next():
-                self.got_message(msg)
 
         def connectionMade(self):
             global clients
@@ -658,7 +667,7 @@ class ChatFactory(Factory):
               <pre><code class="lang-python">
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        return ChatServer()
+        return ChatSession()
               </code></pre>
         <aside class="notes">
         </aside>
@@ -668,7 +677,7 @@ class ChatFactory(Factory):
               <pre><code class="lang-python">
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        return ChatServer()
+        return ChatSession()
 
 def main(reactor):
               </code></pre>
@@ -680,7 +689,7 @@ def main(reactor):
               <pre><code class="lang-python">
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        return ChatServer()
+        return ChatSession()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
@@ -693,7 +702,7 @@ def main(reactor):
               <pre><code class="lang-python">
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        return ChatServer()
+        return ChatSession()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
@@ -707,7 +716,7 @@ def main(reactor):
               <pre><code class="lang-python">
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        return ChatServer()
+        return ChatSession()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
@@ -722,7 +731,7 @@ def main(reactor):
               <pre><code class="lang-python">
 class ChatFactory(Factory):
     def buildProtocol(self, addr):
-        return ChatServer()
+        return ChatSession()
 
 def main(reactor):
     endpoint = TCP4ServerEndpoint(reactor, 10001)
@@ -1301,6 +1310,8 @@ public:
   MSGPACK_DEFINE( nickname, message );
 };</code></pre>
         <aside class="notes">
+          mention cross-language encoding<br/>
+          like json but binary
         </aside>
     </section>
 
@@ -1547,7 +1558,7 @@ private:
     <section id="cpp_server_code">
       <section data-transition="none">
         <h3>asio server <span class="aside">session</span></h3>
-        <pre><code class="cpp">// this is the connection to the client
+        <pre><code class="cpp">// equiv to txchat.ChatSession
 class chat_session : public std::enable_shared_from_this&lt;chat_session>
 {
 public:
@@ -1600,7 +1611,8 @@ private:
     <section>
       <section data-transition="none">
         <h3>asio server <span class="aside">acceptor</span></h3>
-        <pre><code class="cpp">class chat_server
+        <pre><code class="cpp">// equiv to txchat.ChatFactory
+class chat_server
 {
 public:
     chat_server( boost::asio::io_service& io_service,
@@ -1618,8 +1630,7 @@ private:
       </section>
       <section data-transition="none">
         <h3>asio server <span class="aside">acceptor</span></h3>
-        <pre><code class="cpp">// equiv to txchat.ChatFactory
-void chat_server::do_accept()
+        <pre><code class="cpp">void chat_server::do_accept()
 {
     m_acceptor.async_accept( m_socket,
     // this is a C++11 lambda (aka anonymous function)
