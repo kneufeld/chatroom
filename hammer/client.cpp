@@ -42,7 +42,7 @@ hammer_client::~hammer_client()
 {
     std::lock_guard<std::mutex> lock( cout_mutex );
     std::cout << m_nickname << " sent " << m_sent_count << std::endl;
-    std::cout << m_nickname << " recv " << m_recv_count << std::endl;
+    std::cout << m_nickname << " recv " << (m_recv_count / 21) << std::endl;
 }
 
 void hammer_client::handle_connect( const boost::system::error_code& error )
@@ -74,7 +74,7 @@ void hammer_client::cb_read_socket( const boost::system::error_code& error, std:
         return;
     }
 
-    m_recv_count++;
+    m_recv_count += bytes_recv;
     listen_on_socket(); // read more bytes
 }
 

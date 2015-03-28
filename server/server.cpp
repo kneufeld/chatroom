@@ -110,8 +110,6 @@ void chat_session::do_read()
             return;
         }
 
-        msg_recv++;
-
         try
         {
             // feed data to unpacker, need to decode incoming bytes
@@ -125,6 +123,7 @@ void chat_session::do_read()
 
             if( m_unpacker.next( &result ) )
             {
+                msg_recv++;
                 chat_message msg;
                 result.get().convert( &msg );
                 TL_S_TRACE << *self << ": " << msg;

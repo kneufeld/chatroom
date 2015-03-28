@@ -1,6 +1,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/utility/empty_deleter.hpp>
+#include <boost/core/null_deleter.hpp>
 #include <boost/date_time.hpp>
 #include <boost/log/support/date_time.hpp>
 
@@ -132,6 +132,6 @@ void Logger::set_level( severity_level level )
 void Logger::enable_console()
 {
     logging::core::get()->set_logging_enabled( true );
-    mk_stream_logger( boost::shared_ptr< std::ostream >( &std::cout, boost::empty_deleter() ) );
+    mk_stream_logger( boost::shared_ptr< std::ostream >( &std::cout, boost::null_deleter() ) );
     LFC1_LOG_INFO( _logger::get() ) << "sending logs to console";
 }

@@ -55,6 +55,8 @@ CC = /usr/local/opt/gcc/bin/gcc-4.9
 CXX = /usr/local/opt/gcc/bin/g++-4.9
 CC = gcc
 CXX = g++
+#CC = clang
+#CXX = clang++
 THREADING =
 
 ### YOU PROBABLY DON'T NEED TO CHANGE ANYTHING BELOW HERE ###

@@ -120,15 +120,19 @@ pre > code
       <p><a href="https://@meejah.ca">https://<span style="font-size: 150%; text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); text-decoration: underline; -moz-text-decoration-color: rgba(255, 64, 64, 0.5);">@meejah</span>.ca</a></p>
 
       <div style="width: 1024px; margin-top: 150px;">
+<!--
         <p class="fragment" style="opacity: 0.7; float: left;">
           <img src="images/txtorcon-logo.svg" style="box-shadow: none; border: none; background: none !important;" width="250" height="250" /><br />
           txtorcon.rtfd.org
         </p>
+-->
 
+<!--
         <p class="fragment" style="opacity: 0.7; float: left; margin-left: 4em;">
           <img src="images/crossbar.svg" style="padding-top: 25px; padding-bottom: 25px; box-shadow: none; border: none; background: none !important;" width="200" height="200" /><br />
           crossbar.io
         </p>
+-->
       </div>
     </section>
 
@@ -1764,37 +1768,39 @@ private:
     </section>
 
     <section>
-      <h2>C++ Performance</h2>
+      <h2>Performance</h2>
       <div style="float: left">
         <table>
           <tr class="fragment" data-fragment-index=1>
-            <td># clients</td>
-            <td>15</td>
+            <td>server</td>
+            <td>8-core Xeon E3 <span class="aside">3.4GHz w/</span> 16GiB RAMz</td>
           </tr>
-          <tr class="fragment" data-fragment-index=1>
+          <tr class="fragment" data-fragment-index=2>
+            <td>clients</td>
+            <td>32</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=2>
             <td>send delay</td>
             <td>1ms</td>
           </tr>
-          <tr class="fragment" data-fragment-index=1>
+          <tr class="fragment" data-fragment-index=2>
             <td>msg size</td>
             <td>21 bytes</td>
           </tr>
-          <tr class="fragment" data-fragment-index=2>
-            <td>total msg sent</td>
-            <td>638,316 <span class="aside">x15 ≈ 9M</span></td>
-          </tr>
-          <tr class="fragment" data-fragment-index=2>
-            <td>total msg recv</td>
-            <td>8,935,859</td>
-          </tr>
           <tr class="fragment" data-fragment-index=3>
-            <td>msg/sec</td>
-            <td>161,983</td>
+            <td>total messages</td>
+            <td>≈56M</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=4>
+            <td>C++ msg/sec</td>
+            <td>≈1M</td>
+          </tr>
+          <tr class="fragment" data-fragment-index=5>
+            <td>PyPy msg/sec</td>
+            <td>≈1M</td>
           </tr>
         </table>
       </div>
-      <p class="fragment" data-fragment-index=4>zero optimizations</p>
-      <p class="fragment" data-fragment-index=5>running in debug mode</p>
         <aside class="notes">
         </aside>
     </section>
@@ -1856,6 +1862,15 @@ $ client kurt polyglot.burgundywall.com 10001
       <h3>
         <a href="https://github.com/kneufeld/chatroom">https://github.com/kneufeld/chatroom</a>
       </h3>
+      <p class="fragment">
+        install txchat:
+        <pre><code>
+virtualenv poly
+source ./poly/bin/activate
+pip install https://meejah.ca/poly/txchat-1.0.0.tar.gz
+txchat --help
+        </code></pre>
+      </p>
       <aside class="notes">
       </aside>
     </section>

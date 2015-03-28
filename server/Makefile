@@ -49,14 +49,13 @@ CPPFLAGS = -I$(SRC_DIR) $(INC_DIR)
 #-std=c++11
 CFLAGS = $(DEBUG) $(OPTIMIZE) 
 CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11
-CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11
-#-stdlib=libc++
+#CXXFLAGS = $(DEBUG) $(OPTIMIZE) -std=c++11 -stdlib=libc++
 
 ## Compiler/tools information
 CC = /usr/local/opt/gcc/bin/gcc-4.9
 CXX = /usr/local/opt/gcc/bin/g++-4.9
-CC = clang
-CXX = clang++
+#CC = clang
+#CXX = clang++
 CC = gcc
 CXX = g++
 THREADING =
