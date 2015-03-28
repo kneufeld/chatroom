@@ -42,6 +42,15 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
     {
         auto parsed = po::command_line_parser( argc, argv ).options( desc ).positional( pd ).run();
         po::store( parsed, opts );
+
+        // test for help before notify as it throws if there are no ports
+        if( opts.count( "help" ) )
+        {
+            cout << "usage: " << app_name << " [options] " << pd.name_for_position( 0 ) << endl;
+            cout << desc << endl;
+            exit( 0 );
+        }
+
         po::notify( opts ); // this can throw
     }
     catch( boost::program_options::error& e )
@@ -54,13 +63,6 @@ bool parse_cmd_line( int argc, char** argv, po::variables_map& opts )
         cerr << e.what() << endl;
         cerr << desc << endl;
         return false;
-    }
-
-    if( opts.count( "help" ) )
-    {
-        cout << "usage: " << app_name << " [options] " << pd.name_for_position( 0 ) << endl;
-        cout << desc << endl;
-        exit( 0 );
     }
 
     Logger::instance().set_level( ( Logger::severity_level )opts["debug"].as<unsigned>() );
